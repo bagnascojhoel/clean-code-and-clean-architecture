@@ -1,8 +1,13 @@
+const FIRST_VERIFIER_DIGIT_FACTOR = 10;
+const SECOND_VERIFIER_DIGIT_FACTOR = 11;
+const FIRST_VERIFIER_DIGIT_INDEX = 9;
+const SECOND_VERIFIER_DIGIT_INDEX = 10;
 export class Cpf {
     private _value: string;
 
-    constructor(value: any) {
-        if (!this.isValidValue(value)) throw Error('CPF is invalid');
+    constructor(value: string | null | undefined) {
+        if (!value) throw Error('There is no value');
+        if (this.isInvalidCpf(value)) throw Error('CPF is invalid');
         this._value = this.leaveOnlyDigits(value);
     }
 
@@ -10,57 +15,39 @@ export class Cpf {
         return this._value;
     }
 
-    isValidValue(value: string) {
-        if (!value) return false;
-        const aString = this.leaveOnlyDigits(value);
-        if (!this.hasCpfLength(aString) || this.isSameCharacter(aString)) return false;
-        const firstVerifierDigit = this.calculateFirstVerifierDigit(aString);
-        const secondVerifierDigit = this.calculateSecondVerifierDigit(aString, firstVerifierDigit);
-        return parseInt(aString[9]) == firstVerifierDigit && parseInt(aString[10]) == secondVerifierDigit;
+    isInvalidCpf(value: string) {
+        const cpfDigits = this.leaveOnlyDigits(value);
+        if (this.isInvalidLength(cpfDigits)) return true;
+        if (this.isOnlySameCharacter(cpfDigits)) return true;
+        if (this.isInvalidVerifierDigit(cpfDigits, FIRST_VERIFIER_DIGIT_INDEX, FIRST_VERIFIER_DIGIT_FACTOR)) return true;
+        return this.isInvalidVerifierDigit(cpfDigits, SECOND_VERIFIER_DIGIT_INDEX, SECOND_VERIFIER_DIGIT_FACTOR);
     }
 
     leaveOnlyDigits(aString: string): string {
         return aString.replaceAll(/[^0-9]/g, '');
     }
 
-    hasCpfLength(aString: string): boolean {
-        return aString.length === 11;
+    isInvalidLength(aString: string): boolean {
+        return aString.length !== 11;
     }
 
-    isSameCharacter(aString: string) {
+    isOnlySameCharacter(aString: string) {
         return aString.split("").every(character => character === aString[0])
     }
 
-    calculateFirstVerifierDigit(value: string): number {
-        const summationUntilNinthDigit = this.calcCpfSummationUntilNinthDigit(value);
-        const remainder = summationUntilNinthDigit % 11;
+    isInvalidVerifierDigit(cpf: string, verifierDigitIndex: number, factor: number) {
+        const secondVerifierDigit = this.calculateVerifierDigit(cpf, factor);
+        return `${secondVerifierDigit}` !== cpf.at(verifierDigitIndex);
+    }
+
+    calculateVerifierDigit(cpf: string, factor: number) {
+        let summation: number = 0;
+        for (let i = 0; i < cpf.length && factor > 1; i++, factor--) {
+            summation += parseInt(cpf[i]) * factor;
+        }
+        const remainder = summation % 11;
         return remainder < 2 ? 0 : 11 - remainder;
-    }
 
-
-    calcCpfSummationUntilNinthDigit(aString: string): number {
-        let result: number = 0;
-        for (let i = 0; i <= 8; i++)
-            result += parseInt(aString[i]) * (10 - i);
-        return result;
-    }
-
-    calculateSecondVerifierDigit(
-        baseString: string,
-        firstVerifierDigit: number
-    ): number {
-        const digits = baseString.split('');
-        digits[9] = firstVerifierDigit.toString();
-        const summationUntilTenthDigit = this.calcCpfSummationUntilTenthDigit(digits);
-        const remainder = summationUntilTenthDigit % 11;
-        return remainder < 2 ? 0 : 11 - remainder;
-    }
-
-    calcCpfSummationUntilTenthDigit(digits: string[]): number {
-        let result: number = 0;
-        for (let i = 0; i <= 9; i++)
-            result += parseInt(digits[i]) * (11 - i);
-        return result;
     }
 
 }

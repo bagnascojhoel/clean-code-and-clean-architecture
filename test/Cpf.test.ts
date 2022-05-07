@@ -2,15 +2,15 @@ import { Cpf } from '../src/Cpf'
 
 describe('Invalid CPF scenarios', () => {
     test('Should throw error when value is null', () => {
-        expect(() => new Cpf(null)).toThrow(new Error("CPF is invalid"));
+        expect(() => new Cpf(null)).toThrow(new Error("There is no value"));
     })
 
     test('Should throw error when value is undefined', () => {
-        expect(() => new Cpf(undefined)).toThrow(new Error("CPF is invalid"));
+        expect(() => new Cpf(undefined)).toThrow(new Error("There is no value"));
     })
 
     test('Should throw error when value is empty string', () => {
-        expect(() => new Cpf(' ')).toThrow(new Error("CPF is invalid"));
+        expect(() => new Cpf('')).toThrow(new Error("There is no value"));
     })
 
     test('Should throw error when value is smaller than 11', () => {
