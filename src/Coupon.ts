@@ -7,8 +7,12 @@ export default class Coupon {
         this.discountPercentage = discountPercentage;
     }
 
-    private isBlank(aString: string) {
+    private isBlank(aString: string): boolean {
         return aString.replace(/\s/, '').length === 0;
+    }
+
+    public applyDiscount(initialPrice: number): number {
+        return initialPrice * (1 - this.discountPercentage);
     }
 
 }

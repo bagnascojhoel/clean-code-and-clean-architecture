@@ -1,8 +1,8 @@
 import Coupon from "./Coupon";
-import { Cpf } from "./Cpf";
-import { OrderItem } from "./OrderItem";
+import Cpf from "./Cpf";
+import OrderItem from "./OrderItem";
 
-export class Order {
+export default class Order {
     readonly cpf: Cpf;
     private items: OrderItem[];
     private coupon?: Coupon;
@@ -14,10 +14,10 @@ export class Order {
     }
 
     public get price() {
-        const sum = this.items.reduce((acc: number, item: OrderItem) => {
+        const total = this.items.reduce((acc: number, item: OrderItem) => {
             return acc + item.totalPrice;
         }, 0);
-        return sum - (sum * (this.coupon?.discountPercentage ?? 0));
+        return this.coupon ? this.coupon.applyDiscount(total) : total;
     }
 
 }
