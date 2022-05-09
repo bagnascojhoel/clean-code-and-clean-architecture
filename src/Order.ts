@@ -1,23 +1,23 @@
+import Coupon from "./Coupon";
 import { Cpf } from "./Cpf";
 import { OrderItem } from "./OrderItem";
 
 export class Order {
-    private _cpf: Cpf;
-    private _voucher: number;
-    private _items: OrderItem[];
+    readonly cpf: Cpf;
+    private items: OrderItem[];
+    private coupon?: Coupon;
 
-    constructor(cpf: string, voucher: number | null, items: OrderItem[]) {
-        if (voucher && voucher < 0) throw Error('Voucher cannot be negative');
-        this._cpf = new Cpf(cpf);
-        this._voucher = voucher ?? 0;
-        this._items = items;
+    constructor(cpf: string, items: OrderItem[], coupon?: Coupon) {
+        this.cpf = new Cpf(cpf);
+        this.items = items;
+        this.coupon = coupon;
     }
 
     public get price() {
-        const sum = this._items.reduce((acc: number, item: OrderItem) => {
+        const sum = this.items.reduce((acc: number, item: OrderItem) => {
             return acc + item.totalPrice;
         }, 0);
-        return sum - (sum * this._voucher);
+        return sum - (sum * (this.coupon?.discountPercentage ?? 0));
     }
 
 }
