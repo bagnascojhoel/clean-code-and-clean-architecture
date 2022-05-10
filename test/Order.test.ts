@@ -2,6 +2,7 @@ import OrderItem from '../src/OrderItem';
 import Order from '../src/Order';
 import Coupon from '../src/Coupon';
 import WarehouseItem from '../src/WarehouseItem';
+import { DateTime } from 'luxon';
 
 const VALID_CPF = '80700816003';
 const WAREHOUSE_ITEM = new WarehouseItem(12, 'a description', 123);
@@ -27,6 +28,7 @@ test('Should have price equal to sum of all item when there is no coupon', () =>
 test('Should have price 70 when total is 100 and there is a coupon for 30%', () => {
     const item1 = new OrderItem(WAREHOUSE_ITEM, 50, 1);
     const item2 = new OrderItem(WAREHOUSE_ITEM, 50, 1);
-    const order = new Order(VALID_CPF, [item1, item2], new Coupon('d30', 0.3));
+    const coupon = new Coupon('d1', .3, DateTime.now().plus({ days: 1 }));
+    const order = new Order(VALID_CPF, [item1, item2], coupon);
     expect(order.price).toBe(70);
 })
