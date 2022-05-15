@@ -1,5 +1,3 @@
-import SpaceMeasure from "./SpaceMeasure";
-
 export const SingleDimensionalSpace = {
     MM: {
         key: 'MM',
