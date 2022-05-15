@@ -4,6 +4,7 @@ import Coupon from '../src/Coupon';
 import { DateTime } from 'luxon';
 import WarehouseItemMother from './objectmothers/WarehouseItemMother';
 import Address from '../src/Address';
+import Decimal from 'decimal.js';
 
 const VALID_CPF: string = '80700816003';
 const WAREHOUSE_ITEM = WarehouseItemMother.createGuitar();
@@ -29,7 +30,7 @@ test('Should have price equal to sum of all item when there is no coupon', () =>
     const item1 = new OrderItem(WAREHOUSE_ITEM, 15, 2);
     const item2 = new OrderItem(WAREHOUSE_ITEM, 2, 1);
     const order = new Order(VALID_CPF, DESTINATION, [item1, item2]);
-    expect(order.price).toBe(32);
+    expect(order.totalPrice).toStrictEqual(new Decimal(32));
 })
 
 test('Should have price 70 when total is 100 and there is a coupon for 30%', () => {
@@ -37,13 +38,5 @@ test('Should have price 70 when total is 100 and there is a coupon for 30%', () 
     const item2 = new OrderItem(WAREHOUSE_ITEM, 50, 1);
     const coupon = new Coupon('d1', .3, DateTime.now().plus({ days: 1 }));
     const order = new Order(VALID_CPF, DESTINATION, [item1, item2], coupon);
-    expect(order.price).toBe(70);
+    expect(order.totalPrice).toStrictEqual(new Decimal(70));
 })
-
-// test('Should work', () => {
-//     const warehouseItem1 = WarehouseItemMother.createGuitar();
-//     const item1 = new OrderItem(WAREHOUSE_ITEM, 50, 1);
-//     const item2 = new OrderItem(WAREHOUSE_ITEM, 50, 1);
-//     const order = new Order(VALID_CPF, DESTINATION, [item1, item2]);
-//     expect(() => )
-// })

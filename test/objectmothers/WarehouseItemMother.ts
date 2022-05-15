@@ -6,7 +6,7 @@ function createGuitar(): WarehouseItem {
         1,
         'Blue HoxNox T532K',
         10,
-        PhysicalAttributesMother.createHandCube()
+        PhysicalAttributesMother.createCamera()
     );
 }
 

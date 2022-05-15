@@ -22,7 +22,7 @@ export default class PhysicalAttributes {
     public get kilogramMetricDensity(): Decimal {
         const volume = this.metricVolume.value;
         const weight = this.weight.as(WeightMeasureUnit.KG);
-        return weight.value.div(volume);
+        return new Decimal(weight.value.div(volume).toPrecision(3));
     }
 
     public get metricVolume(): SpaceMeasure {

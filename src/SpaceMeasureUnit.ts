@@ -10,6 +10,10 @@ export const SingleDimensionalSpace = {
     M: {
         key: 'M',
         conversionFactor: '1',
+    },
+    KM: {
+        key: 'KM',
+        conversionFactor: '1000',
     }
 } as const;
 
