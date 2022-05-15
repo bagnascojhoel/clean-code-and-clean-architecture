@@ -1,7 +1,7 @@
 import WarehouseItem from "../../src/WarehouseItem";
 import PhysicalAttributesMother from "./PhysicalAttributesMother";
 
-function createGuitar(): WarehouseItem {
+function createCamera(): WarehouseItem {
     return new WarehouseItem(
         1,
         'Blue HoxNox T532K',
@@ -10,4 +10,4 @@ function createGuitar(): WarehouseItem {
     );
 }
 
-export default { createGuitar }
+export default { createCamera }

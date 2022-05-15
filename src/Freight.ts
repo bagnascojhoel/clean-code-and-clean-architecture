@@ -17,7 +17,7 @@ export default class Freight {
         this.items = items;
     }
 
-    get price(): Decimal {
+    calculatePrice(): Decimal {
         const totalOnItems: Decimal = this.items.reduce<Decimal>((acc, item) => {
             const metricVolume = item.unitaryPhysicalAttributes().metricVolume.value;
             const kilogramMetricDensity = item.unitaryPhysicalAttributes().kilogramMetricDensity;
