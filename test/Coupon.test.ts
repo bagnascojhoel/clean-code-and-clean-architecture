@@ -14,12 +14,12 @@ test('Should throw error when expiration date is yesterday', () => {
     expect(() => new Coupon('d20', .2, yesterday)).toThrowError('Coupon is expired')
 })
 
-test.only('Should not throw when expiration date is today', () => {
+test('Should not throw when expiration date is today', () => {
     const today = DateTime.now();
     expect(() => new Coupon('d20', .2, today)).not.toThrowError('Coupon is expired')
 })
 
-test.only('Should not throw when expiration date is tomorrow', () => {
+test('Should not throw when expiration date is tomorrow', () => {
     const tomorrow = DateTime.now().plus({ days: 1 });
     expect(() => new Coupon('d20', .2, tomorrow)).not.toThrowError('Coupon is expired')
 })

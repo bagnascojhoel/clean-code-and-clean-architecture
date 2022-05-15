@@ -8,10 +8,12 @@ export default class Freight {
     private items: Freightable[];
 
     constructor(
+        readonly minimumPrice: Decimal,
         readonly origin: Address,
         readonly destination: Address,
         items: Freightable[]
     ) {
+        this.minimumPrice = minimumPrice
         this.origin = origin;
         this.destination = destination;
         this.items = items;
@@ -25,7 +27,8 @@ export default class Freight {
             return acc.plus(singleItemPricing.times(item.quantity()));
         }, new Decimal(0));
         const distance = this.origin.calculateDistance(this.destination);
-        return totalOnItems.times(distance.value);
+        const calculatedPrice = totalOnItems.times(distance.value);
+        return calculatedPrice.greaterThan(this.minimumPrice) ? calculatedPrice : this.minimumPrice;
     }
 
 }
