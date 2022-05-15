@@ -3,7 +3,6 @@ import { SingleDimensionalSpace, SpaceMeasureUnit, TriDimensionalSpace } from ".
 import WeightMeasure from "./WeightMeasure";
 
 export default class PhysicalAttributes {
-    private spaceMeasureUnit: SpaceMeasureUnit;
 
     constructor(
         readonly widthX: SpaceMeasure,
@@ -16,7 +15,6 @@ export default class PhysicalAttributes {
         this.heightZ = heightZ;
         this.lengthY = lengthY;
         this.weight = weight;
-        this.spaceMeasureUnit = widthX.unit;
     }
 
     public get metricVolume(): SpaceMeasure {
