@@ -28,12 +28,12 @@ test('Should have volume 0.003m³ when object is 20x15x10cm', () => {
     expect(physicalAttributes.metricVolume).toStrictEqual(new SpaceMeasure('0.003', TriDimensionalSpace.M3));
 })
 
-// test('Should have density 100 when object is 100x30x10cm and weights 3kg', () => {
-//     const physicalAttributes = new PhysicalAttributes(
-//         new SpaceMeasure('100', SingleDimensionalSpace.CM),
-//         new SpaceMeasure('30', SingleDimensionalSpace.CM),
-//         new SpaceMeasure('10', SingleDimensionalSpace.CM),
-//         new WeightMeasure(3, WeightMeasureUnit.KG),
-//     );
-//     expect(physicalAttributes.kilogramMetricDensity).toStrictEqual(new Decimal('100'));
-// })
+test('Should have density 100 when object is 100x30x10cm and weights 3kg', () => {
+    const physicalAttributes = new PhysicalAttributes(
+        new SpaceMeasure('100', SingleDimensionalSpace.CM),
+        new SpaceMeasure('30', SingleDimensionalSpace.CM),
+        new SpaceMeasure('10', SingleDimensionalSpace.CM),
+        new WeightMeasure(3, WeightMeasureUnit.KG),
+    );
+    expect(physicalAttributes.kilogramMetricDensity).toStrictEqual(new Decimal('100'));
+})

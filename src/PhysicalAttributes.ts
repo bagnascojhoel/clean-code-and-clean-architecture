@@ -2,6 +2,7 @@ import Decimal from "decimal.js";
 import SpaceMeasure from "./SpaceMeasure";
 import { SingleDimensionalSpace, TriDimensionalSpace } from "./SpaceMeasureUnit";
 import WeightMeasure from "./WeightMeasure";
+import { WeightMeasureUnit } from "./WeightMeasureUnit";
 
 export default class PhysicalAttributes {
 
@@ -18,10 +19,11 @@ export default class PhysicalAttributes {
         this.weight = weight;
     }
 
-    // public get kilogramMetricDensity(): Decimal {
-    //     const volume = this.metricVolume.value;
-    //     const weight = this.weight;
-    // }
+    public get kilogramMetricDensity(): Decimal {
+        const volume = this.metricVolume.value;
+        const weight = this.weight.as(WeightMeasureUnit.KG);
+        return weight.value.div(volume);
+    }
 
     public get metricVolume(): SpaceMeasure {
         const volume = this.widthX.as(SingleDimensionalSpace.M).value
