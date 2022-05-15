@@ -1,7 +1,7 @@
 import OrderItem from '../src/OrderItem';
-import WarehouseItem from '../src/WarehouseItem';
+import WarehouseItemMother from './objectmothers/WarehouseItemMother';
 
-const WAREHOUSE_ITEM = new WarehouseItem(12, 'a description', 123);
+const WAREHOUSE_ITEM = WarehouseItemMother.createGuitar();
 
 test('Should create with success when all parameters are valid', () => {
     expect(() => new OrderItem(WAREHOUSE_ITEM, 123.34, 123)).not.toThrowError();
