@@ -1,6 +1,6 @@
-import Address from "../src/Address";
-import SpaceMeasure from "../src/SpaceMeasure";
-import { SingleDimensionalSpace } from '../src/SpaceMeasureUnit';
+import Address from "../../src/domain/entity/Address";
+import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
+import { SingleDimensionalSpace } from "../../src/domain/entity/SpaceMeasureUnit";
 
 test('Should be created when all parameters are valid', () => {
     expect(() => new Address()).not.toThrow();

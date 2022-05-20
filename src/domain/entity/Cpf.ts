@@ -1,10 +1,5 @@
 import { CpfVerifierDigit } from "./CpfVerifierDigit";
 
-const FIRST_VERIFIER_DIGIT_FACTOR = 10;
-const SECOND_VERIFIER_DIGIT_FACTOR = 11;
-const FIRST_VERIFIER_DIGIT_INDEX = 9;
-const SECOND_VERIFIER_DIGIT_INDEX = 10;
-
 export default class Cpf {
     private _value: string;
 

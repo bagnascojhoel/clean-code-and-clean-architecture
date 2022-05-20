@@ -1,4 +1,5 @@
-import Address from "../../src/Address";
+import Address from "../../src/domain/entity/Address";
+
 
 function createRubensAddress(): Address {
     return new Address();

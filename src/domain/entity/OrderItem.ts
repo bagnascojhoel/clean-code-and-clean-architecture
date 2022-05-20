@@ -8,18 +8,18 @@ export default class OrderItem implements Freightable {
 
     constructor(
         readonly warehouseItem: WarehouseItem,
-        readonly paidUnitaryPrice: number,
+        readonly paidUnitaryPrice: Decimal,
         quantity: number,
     ) {
-        if (paidUnitaryPrice <= 0) throw new Error('Paid unitary price cannot be negative');
+        if (paidUnitaryPrice.isNegative()) throw new Error('Paid unitary price cannot be negative');
         if (quantity <= 0) throw new Error('Quantity cannot be zero or negative');
         this.warehouseItem = warehouseItem;
         this.paidUnitaryPrice = paidUnitaryPrice;
         this._quantity = quantity;
     }
 
-    get totalPrice() {
-        return this.paidUnitaryPrice * this._quantity;
+    get totalPrice(): Decimal {
+        return this.paidUnitaryPrice.times(this._quantity);
     }
 
     quantity(): number {

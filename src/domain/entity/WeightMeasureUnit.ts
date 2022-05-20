@@ -1,4 +1,4 @@
-export const WeightMeasureUnit = {
+const WeightMeasureUnit = {
     MG: {
         conversionFactor: '0.001'
     },
@@ -14,3 +14,5 @@ export const WeightMeasureUnit = {
 } as const;
 
 export type WeightMeasureUnit = typeof WeightMeasureUnit[keyof typeof WeightMeasureUnit];
+
+export default WeightMeasureUnit;

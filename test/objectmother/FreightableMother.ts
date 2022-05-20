@@ -1,4 +1,5 @@
-import Freightable from "../../src/Freightable";
+
+import Freightable from "../../src/domain/entity/Freightable";
 import PhysicalAttributesMother from "./PhysicalAttributesMother";
 
 function createTenCameras(): Freightable {

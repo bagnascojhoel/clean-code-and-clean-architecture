@@ -1,9 +1,10 @@
 import Decimal from "decimal.js";
-import PhysicalAttributes from "../src/PhysicalAttributes"
-import SpaceMeasure from "../src/SpaceMeasure";
-import { SingleDimensionalSpace, TriDimensionalSpace } from "../src/SpaceMeasureUnit";
-import WeightMeasure from "../src/WeightMeasure";
-import { WeightMeasureUnit } from "../src/WeightMeasureUnit";
+import PhysicalAttributes from "../../src/domain/entity/PhysicalAttributes";
+import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
+import { SingleDimensionalSpace, TriDimensionalSpace } from "../../src/domain/entity/SpaceMeasureUnit";
+import WeightMeasure from "../../src/domain/entity/WeightMeasure";
+import WeightMeasureUnit from "../../src/domain/entity/WeightMeasureUnit";
+
 
 const SPACE_MEASURE = new SpaceMeasure('10', SingleDimensionalSpace.CM);
 const WEIGHT_MEASURE = new WeightMeasure('500', WeightMeasureUnit.G);

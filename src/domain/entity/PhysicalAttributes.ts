@@ -2,7 +2,7 @@ import Decimal from "decimal.js";
 import SpaceMeasure from "./SpaceMeasure";
 import { SingleDimensionalSpace, TriDimensionalSpace } from "./SpaceMeasureUnit";
 import WeightMeasure from "./WeightMeasure";
-import { WeightMeasureUnit } from "./WeightMeasureUnit";
+import WeightMeasureUnit from "./WeightMeasureUnit";
 
 export default class PhysicalAttributes {
 

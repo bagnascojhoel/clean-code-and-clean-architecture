@@ -1,5 +1,5 @@
-import WeightMeasure from "../src/WeightMeasure";
-import { WeightMeasureUnit } from "../src/WeightMeasureUnit";
+import WeightMeasure from "../../src/domain/entity/WeightMeasure";
+import WeightMeasureUnit from "../../src/domain/entity/WeightMeasureUnit";
 
 test('Should be created when using a weight measure unit', () => {
     expect(() => new WeightMeasure('40', WeightMeasureUnit.G)).not.toThrow();

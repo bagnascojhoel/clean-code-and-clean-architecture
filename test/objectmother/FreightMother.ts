@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import Freight from "../../src/Freight";
+import Freight from "../../src/domain/entity/Freight";
 import AddressMother from "./AddressMother";
 import FreightableMother from "./FreightableMother";
 

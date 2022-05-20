@@ -1,6 +1,6 @@
-import Decimal from "decimal.js";
-import SpaceMeasure from "../src/SpaceMeasure"
-import { SpaceMeasureUnit, BiDimensionalSpace, SingleDimensionalSpace, TriDimensionalSpace } from "../src/SpaceMeasureUnit";
+import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
+import { BiDimensionalSpace, SingleDimensionalSpace, SpaceMeasureUnit, TriDimensionalSpace } from "../../src/domain/entity/SpaceMeasureUnit";
+
 
 test('Should be created when using a space measure unit', () => {
     expect(() => new SpaceMeasure('40', SingleDimensionalSpace.CM)).not.toThrow();

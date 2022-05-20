@@ -1,4 +1,4 @@
-import Cpf from '../src/Cpf'
+import Cpf from "../../src/domain/entity/Cpf";
 
 describe('Invalid CPF scenarios', () => {
     test('Should throw error when value is null', () => {
