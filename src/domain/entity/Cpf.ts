@@ -13,7 +13,7 @@ export default class Cpf {
         return this._value;
     }
 
-    isInvalidCpf(value: string) {
+    private isInvalidCpf(value: string) {
         const cpfDigits = this.leaveOnlyDigits(value);
         if (this.isInvalidLength(cpfDigits)) return true;
         if (this.isOnlySameCharacter(cpfDigits)) return true;
@@ -23,11 +23,11 @@ export default class Cpf {
         return secondVerifierDigit.isInvalidVerifierDigit(cpfDigits);
     }
 
-    leaveOnlyDigits(aString: string): string {
+    private leaveOnlyDigits(aString: string): string {
         return aString.replaceAll(/[^0-9]/g, '');
     }
 
-    isInvalidLength(aString: string): boolean {
+    private isInvalidLength(aString: string): boolean {
         return aString.length !== 11;
     }
 

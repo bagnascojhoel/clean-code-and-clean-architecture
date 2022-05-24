@@ -1,6 +1,6 @@
 
 import WarehouseItem from "../../src/domain/entity/WarehouseItem";
-import PhysicalAttributesMother from "../objectmother/PhysicalAttributesMother";
+import PhysicalAttributesMother from "../object-mother/PhysicalAttributesMother";
 
 const PHYSICAL_ATTRIBUTES = PhysicalAttributesMother.createCamera();
 

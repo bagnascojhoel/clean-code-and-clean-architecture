@@ -1,0 +1,80 @@
+import type { Knex } from "knex";
+
+const CREATE_TABLE_ORDER = `
+    CREATE TABLE \`order\` (
+        order_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+        code        VARCHAR(12) NOT NULL UNIQUE,
+        buyer_cpf   VARCHAR(11) NOT NULL,
+        createdAt   DATETIME NOT NULL
+    )
+`
+
+const CREATE_TABLE_WAREHOUSE_ITEM = `
+    CREATE TABLE warehouse_item (
+        warehouse_item_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+        description         TEXT NOT NULL,
+        quantity            DECIMAL(10,3) NOT NULL,
+        metricWidth         DECIMAL(10,3) NOT NULL,
+        metricLength        DECIMAL(10,3) NOT NULL,
+        metricHeight        DECIMAL(10,3) NOT NULL,
+        kilogramWeight      DECIMAL(10,3) NOT NULL
+    )
+`
+
+const CREATE_TABLE_ORDER_ITEM = `
+    CREATE TABLE order_item (
+        order_item_id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id            INTEGER NOT NULL,
+        warehouse_item_id   INTEGER NOT NULL,
+        paid_unitary_price  DECIMAL(10,3) NOT NULL,
+        quantity            DECIMAL(10,3) NOT NULL,
+        FOREIGN KEY (order_id) REFERENCES \`order\` (order_id),
+        FOREIGN KEY (warehouse_item_id) REFERENCES warehouse_item (warehouse_item_id)
+    )
+`
+
+const CREATE_TABLE_ADDRESS = `
+    CREATE TABLE address (
+        address_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        location    TEXT
+    )
+`
+
+const CREATE_TABLE_FREIGHT = `
+    CREATE TABLE freight (
+        freight_id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        minimum_price           DECIMAL(10,3) NOT NULL,
+        origin_address_id       INTEGER NOT NULL,
+        destination_address_id  INTEGER NOT NULL,
+        FOREIGN KEY (origin_address_id) REFERENCES address (address_id),
+        FOREIGN KEY (destination_address_id) REFERENCES address (address_id)
+    )
+`
+
+const CREATE_TABLE_COUPON = `
+    CREATE TABLE coupon (
+        coupon_id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        name                VARCHAR(50) NOT NULL UNIQUE,
+        discount_percentage DECIMAL(4,2) NOT NULL,
+        expires_at          DATETIME NOT NULL
+    )
+`
+
+export async function up(knex: Knex): Promise<void> {
+    await knex.raw(CREATE_TABLE_ORDER)
+    await knex.raw(CREATE_TABLE_WAREHOUSE_ITEM)
+    await knex.raw(CREATE_TABLE_ORDER_ITEM)
+    await knex.raw(CREATE_TABLE_ADDRESS)
+    await knex.raw(CREATE_TABLE_FREIGHT)
+    await knex.raw(CREATE_TABLE_COUPON)
+}
+
+export async function down(knex: Knex): Promise<void> {
+    await knex.schema.dropTableIfExists('order')
+    await knex.schema.dropTableIfExists('warehouse_item')
+    await knex.schema.dropTableIfExists('order_item')
+    await knex.schema.dropTableIfExists('address')
+    await knex.schema.dropTableIfExists('freight')
+    await knex.schema.dropTableIfExists('coupon')
+}
+

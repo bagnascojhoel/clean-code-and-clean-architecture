@@ -1,9 +1,10 @@
 import Decimal from "decimal.js";
+import Prototype from "../Prototype";
 import Freightable from "./Freightable";
 import PhysicalAttributes from "./PhysicalAttributes";
 import WarehouseItem from "./WarehouseItem";
 
-export default class OrderItem implements Freightable {
+export default class OrderItem implements Freightable, Prototype<OrderItem> {
     private _quantity: number;
 
     constructor(
@@ -28,6 +29,13 @@ export default class OrderItem implements Freightable {
 
     unitaryPhysicalAttributes(): PhysicalAttributes {
         return this.warehouseItem.physicalAttributes;
+    }
+
+    cloneDeep(payload?: any): OrderItem {
+        const warehouseItem = payload?.warehouseItem ?? this.warehouseItem;
+        const paidUnitaryPrice = payload?.paidUnitaryPrice ?? this.paidUnitaryPrice;
+        const quantity = payload?.quantity ?? this._quantity;
+        return new OrderItem(warehouseItem, paidUnitaryPrice, quantity)
     }
 
 }

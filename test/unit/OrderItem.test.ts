@@ -1,7 +1,7 @@
 
 import Decimal from 'decimal.js';
 import OrderItem from '../../src/domain/entity/OrderItem';
-import WarehouseItemMother from '../objectmother/WarehouseItemMother';
+import WarehouseItemMother from '../object-mother/WarehouseItemMother';
 
 const WAREHOUSE_CAMERA = WarehouseItemMother.createCamera();
 

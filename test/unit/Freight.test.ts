@@ -3,8 +3,8 @@ import Sinon from "sinon";
 import Freight from "../../src/domain/entity/Freight";
 import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
 import { SingleDimensionalSpace } from "../../src/domain/entity/SpaceMeasureUnit";
-import AddressMother from "../objectmother/AddressMother";
-import FreightableMother from "../objectmother/FreightableMother";
+import AddressMother from "../object-mother/AddressMother";
+import FreightableMother from "../object-mother/FreightableMother";
 
 afterEach(() => {
     Sinon.restore();
