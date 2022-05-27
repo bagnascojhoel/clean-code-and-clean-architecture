@@ -3,6 +3,13 @@
 I'm using this repository to persist all code I create while following the course [by Rodrigo Branas
 about Clean Code And Clean Architecture](https://app.branas.io/public/products).
 
+## Environments
+
+The environment variable `NODE_ENV` is used to specify in which environment the application is running. 
+
+- When testing with Jest, its value is `test`
+- When running for development, its value is `development` (default value)
+
 ## Running
 
 ### Local with actual database implementation
@@ -13,3 +20,4 @@ Username is `postgres` and password `postgres`.
     docker-compose -f compose.infra.yaml up -d
     // or docker compose
 ```
+
