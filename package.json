@@ -7,7 +7,8 @@
     "up": "del ./dist && tsc && node ./dist/main",
     "t": "del ./dist && jest",
     "t:cov": "jest --coverage",
-    "t:wat": "jest --watch"
+    "t:wat": "jest --watch",
+    "migrate:latest": "knex --env development migrate:latest"
   },
   "repository": {
     "type": "git",
@@ -23,23 +24,24 @@
   "dependencies": {
     "@types/jest": "^27.4.1",
     "@types/luxon": "^2.3.2",
-    "@types/sequelize": "^4.28.13",
     "@types/sinon": "^10.0.11",
     "decimal.js": "^10.3.1",
     "del-cli": "^4.0.1",
     "jest": "^27",
     "knex": "^2.0.0",
+    "loadash": "^1.0.0",
     "luxon": "^2.4.0",
-    "sequelize": "^6.19.2",
     "sinon": "^14.0.0",
     "sqlite3": "^5.0.8",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "@types/sqlite3": "^3.1.8",
+    "@types/uuid": "^8.3.4",
     "tsconfig-paths": "^4.0.0"
   }
 }

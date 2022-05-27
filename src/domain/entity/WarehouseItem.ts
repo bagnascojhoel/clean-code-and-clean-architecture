@@ -1,9 +1,11 @@
 import PhysicalAttributes from "./PhysicalAttributes";
 
+export type WarehouseItemId = number
+
 export default class WarehouseItem {
 
     constructor(
-        readonly id: number,
+        readonly id: WarehouseItemId,
         readonly description: string,
         readonly quantity: number,
         readonly physicalAttributes: PhysicalAttributes
@@ -15,3 +17,4 @@ export default class WarehouseItem {
     }
 
 }
+

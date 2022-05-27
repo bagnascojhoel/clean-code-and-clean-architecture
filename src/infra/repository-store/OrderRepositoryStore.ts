@@ -14,7 +14,7 @@ export default class OrderRepositoryStore implements OrderRepository {
         const sequenceId = orderContent.length;
         const newOrder = {
             id: sequenceId,
-            code: order.code,
+            code: order.generateCode(sequenceId),
             cpf: order.cpf.value
         }
         const newOrderContent = [...orderContent, newOrder]

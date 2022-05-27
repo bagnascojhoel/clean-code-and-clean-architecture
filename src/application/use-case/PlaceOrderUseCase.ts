@@ -1,7 +1,8 @@
+import Decimal from "decimal.js";
 import { DateTime } from "luxon";
 import Order from "../../domain/entity/Order"
 import OrderItem from "../../domain/entity/OrderItem";
-import WarehouseItem from "../../domain/entity/WarehouseItem"
+import WarehouseItem, { WarehouseItemId } from "../../domain/entity/WarehouseItem"
 import OrderRepository from "../../domain/repository/OrderRepository"
 
 export default class PlaceOrderUseCase {
@@ -13,7 +14,7 @@ export default class PlaceOrderUseCase {
 
     async execute(input: Input): Promise<any> {
 
-        const order = new Order(1, DateTime.now(), '01060840030', []);
+        const order = new Order(DateTime.now(), '01060840030', []);
         return await this.orderRepository.insert(order);
     }
 
@@ -22,8 +23,8 @@ export default class PlaceOrderUseCase {
 type Input = {
     cpf: string,
     items: {
-        warehouseItem: WarehouseItem,
-        quantity: number
+        warehouseItemId: WarehouseItemId,
+        quantity: Decimal
     }[],
     coupon?: string,
 }

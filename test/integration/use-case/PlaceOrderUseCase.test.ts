@@ -24,3 +24,16 @@ it('Should insert order on repository when input valid', async () => {
     }
     const actual = await placeOrderUseCase.execute(orderContent)
 })
+
+it('Should create with UTC time on repository', async () => {
+    const orderContent = {
+        cpf: CpfMother.createOfRubens(),
+        items: [
+            {
+                warehouseItem: WarehouseItemMother.createCamera(),
+                quantity: 10
+            }
+        ]
+    }
+    const actual = await placeOrderUseCase.execute(orderContent)
+})

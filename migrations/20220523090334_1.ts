@@ -5,7 +5,7 @@ const CREATE_TABLE_ORDER = `
         order_id    INTEGER PRIMARY KEY AUTOINCREMENT,
         code        VARCHAR(12) NOT NULL UNIQUE,
         buyer_cpf   VARCHAR(11) NOT NULL,
-        createdAt   DATETIME NOT NULL
+        created_at   DATETIME NOT NULL
     )
 `
 
@@ -14,10 +14,10 @@ const CREATE_TABLE_WAREHOUSE_ITEM = `
         warehouse_item_id   INTEGER PRIMARY KEY AUTOINCREMENT,
         description         TEXT NOT NULL,
         quantity            DECIMAL(10,3) NOT NULL,
-        metricWidth         DECIMAL(10,3) NOT NULL,
-        metricLength        DECIMAL(10,3) NOT NULL,
-        metricHeight        DECIMAL(10,3) NOT NULL,
-        kilogramWeight      DECIMAL(10,3) NOT NULL
+        metric_width         DECIMAL(10,3) NOT NULL,
+        metric_length        DECIMAL(10,3) NOT NULL,
+        metric_height        DECIMAL(10,3) NOT NULL,
+        kilogram_weight      DECIMAL(10,3) NOT NULL
     )
 `
 

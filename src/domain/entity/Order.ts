@@ -6,33 +6,21 @@ import Cpf from "./Cpf";
 import Freight from "./Freight";
 import OrderItem from "./OrderItem";
 
-const CODE_LENGTH = 8;
+const SEQUENTIAL_ID_CODE_SECTION_LENGTH = 8;
 
-export default class Order implements Prototype<Order> {
-    readonly sequentialId: number;
-    readonly code: string;
+export default class Order {
     readonly cpf: Cpf;
     readonly createdAt: DateTime;
-    private items: OrderItem[];
+    readonly items: OrderItem[];
 
-    constructor(sequentialId: number, createdAt: DateTime, cpf: string, items: OrderItem[]) {
+    constructor(createdAt: DateTime, cpf: string, items: OrderItem[]) {
         if (items.length === 0) throw new Error('Order must have at least one item')
-        this.sequentialId = sequentialId;
         this.cpf = new Cpf(cpf);
         this.createdAt = createdAt;
         this.items = items;
-        this.code = this.generateDomainCode();
     }
 
-    cloneDeep(payload?: any): Order {
-        const id = payload?.id ?? this.sequentialId;
-        const createdAt = payload?.createdAt ?? this.createdAt;
-        const cpf = payload?.cpf ?? this.cpf.value;
-        const items = payload?.items ?? this.items.map(item => item.cloneDeep());
-        return new Order(id, createdAt, cpf, items)
-    }
-
-    calculateTotalPrice(freight: Freight, coupon?: Coupon): Decimal {
+    public calculateTotalPrice(freight: Freight, coupon?: Coupon): Decimal {
         const itemsTotal = this.items.reduce<Decimal>((acc, item) => acc.plus(item.totalPrice), new Decimal(0))
         const couponDiscount = coupon?.calculateDiscount(this.createdAt, itemsTotal) ?? new Decimal(0)
         return itemsTotal
@@ -40,8 +28,8 @@ export default class Order implements Prototype<Order> {
             .plus(freight.calculatePrice());
     }
 
-    private generateDomainCode(): string {
-        const paddedId = new Decimal(this.sequentialId).toString().padStart(CODE_LENGTH, '0');
+    public generateCode(sequentialId: number): string {
+        const paddedId = new Decimal(sequentialId).toString().padStart(SEQUENTIAL_ID_CODE_SECTION_LENGTH, '0');
         return `${this.createdAt.toFormat('yyyy')}${paddedId}`;
     }
 
