@@ -1,5 +1,8 @@
 import Order from "../entity/Order";
+import OrderCode from "../entity/OrderCode";
 
 export default interface OrderRepository {
-    insert(order: Order): Promise<number>
+    save(order: Order): Promise<OrderCode>
+    findOne(code: OrderCode): Promise<Order | null>
+    count(): Promise<number>
 }

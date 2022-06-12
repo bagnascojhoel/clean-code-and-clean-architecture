@@ -1,11 +1,9 @@
-import type { Knex } from "knex";
-
 const CREATE_TABLE_ORDER = `
     CREATE TABLE \`order\` (
         order_id    INTEGER PRIMARY KEY AUTOINCREMENT,
-        code        VARCHAR(12) NOT NULL UNIQUE,
+        code        VARCHAR(12) UNIQUE,
         buyer_cpf   VARCHAR(11) NOT NULL,
-        created_at   DATETIME NOT NULL
+        created_at  DATETIME NOT NULL
     )
 `
 
@@ -13,22 +11,23 @@ const CREATE_TABLE_WAREHOUSE_ITEM = `
     CREATE TABLE warehouse_item (
         warehouse_item_id   INTEGER PRIMARY KEY AUTOINCREMENT,
         description         TEXT NOT NULL,
+        price               DECIMAL(10,3) NOT NULL,
         quantity            DECIMAL(10,3) NOT NULL,
-        metric_width         DECIMAL(10,3) NOT NULL,
-        metric_length        DECIMAL(10,3) NOT NULL,
-        metric_height        DECIMAL(10,3) NOT NULL,
-        kilogram_weight      DECIMAL(10,3) NOT NULL
+        metric_width        DECIMAL(10,3) NOT NULL,
+        metric_length       DECIMAL(10,3) NOT NULL,
+        metric_height       DECIMAL(10,3) NOT NULL,
+        kilogram_weight     DECIMAL(10,3) NOT NULL
     )
 `
 
 const CREATE_TABLE_ORDER_ITEM = `
     CREATE TABLE order_item (
         order_item_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id            INTEGER NOT NULL,
+        order_code          VARCHAR(12) NOT NULL,
         warehouse_item_id   INTEGER NOT NULL,
         paid_unitary_price  DECIMAL(10,3) NOT NULL,
         quantity            DECIMAL(10,3) NOT NULL,
-        FOREIGN KEY (order_id) REFERENCES \`order\` (order_id),
+        FOREIGN KEY (order_code) REFERENCES \`order\` (code),
         FOREIGN KEY (warehouse_item_id) REFERENCES warehouse_item (warehouse_item_id)
     )
 `
@@ -60,7 +59,7 @@ const CREATE_TABLE_COUPON = `
     )
 `
 
-export async function up(knex: Knex): Promise<void> {
+exports.up = async function up(knex) {
     await knex.raw(CREATE_TABLE_ORDER)
     await knex.raw(CREATE_TABLE_WAREHOUSE_ITEM)
     await knex.raw(CREATE_TABLE_ORDER_ITEM)
@@ -69,7 +68,7 @@ export async function up(knex: Knex): Promise<void> {
     await knex.raw(CREATE_TABLE_COUPON)
 }
 
-export async function down(knex: Knex): Promise<void> {
+exports.down = async function down(knex) {
     await knex.schema.dropTableIfExists('order')
     await knex.schema.dropTableIfExists('warehouse_item')
     await knex.schema.dropTableIfExists('order_item')

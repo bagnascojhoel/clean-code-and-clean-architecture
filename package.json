@@ -5,9 +5,9 @@
   "main": "main.js",
   "scripts": {
     "up": "del ./dist && tsc && node ./dist/main",
-    "t": "del ./dist && jest",
-    "t:cov": "jest --coverage",
-    "t:wat": "jest --watch",
+    "test": "del ./dist && jest",
+    "test:unit": "del ./dist && jest unit",
+    "test:coverage": "jest --coverage",
     "migrate:latest": "knex --env development migrate:latest"
   },
   "repository": {
@@ -35,8 +35,7 @@
     "sqlite3": "^5.0.8",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.4",
-    "uuid": "^8.3.2"
+    "typescript": "^4.6.4"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

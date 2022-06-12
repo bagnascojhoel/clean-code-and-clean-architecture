@@ -1,40 +1,39 @@
 import Decimal from "decimal.js";
+import { Distance, Volume, Weight } from "../../src/domain/entity/MeasureUnit";
 import PhysicalAttributes from "../../src/domain/entity/PhysicalAttributes";
 import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
-import { SingleDimensionalSpace, TriDimensionalSpace } from "../../src/domain/entity/SpaceMeasureUnit";
 import WeightMeasure from "../../src/domain/entity/WeightMeasure";
-import WeightMeasureUnit from "../../src/domain/entity/WeightMeasureUnit";
 
 
-const SPACE_MEASURE = new SpaceMeasure('10', SingleDimensionalSpace.CM);
-const WEIGHT_MEASURE = new WeightMeasure('500', WeightMeasureUnit.G);
+const SPACE_MEASURE = new SpaceMeasure('10', Distance.CM);
+const WEIGHT_MEASURE = new WeightMeasure('500', Weight.G);
 
 test('Should be created when all parameters are valid', () => {
     expect(() => new PhysicalAttributes(SPACE_MEASURE, SPACE_MEASURE, SPACE_MEASURE, WEIGHT_MEASURE)).not.toThrow();
 })
 
 test('Should throw error when space measures are not same unit', () => {
-    const cmMeasure = new SpaceMeasure('100', SingleDimensionalSpace.CM);
-    const mMeasure = new SpaceMeasure('100', SingleDimensionalSpace.M);
+    const cmMeasure = new SpaceMeasure('100', Distance.CM);
+    const mMeasure = new SpaceMeasure('100', Distance.M);
     expect(() => new PhysicalAttributes(cmMeasure, cmMeasure, mMeasure, WEIGHT_MEASURE)).toThrowError('Physical attributes\'s space measures must all use same unit');
 })
 
 test('Should have volume 0.003m³ when object is 20x15x10cm', () => {
     const physicalAttributes = new PhysicalAttributes(
-        new SpaceMeasure('20', SingleDimensionalSpace.CM),
-        new SpaceMeasure('15', SingleDimensionalSpace.CM),
-        new SpaceMeasure('10', SingleDimensionalSpace.CM),
-        new WeightMeasure('20', WeightMeasureUnit.KG),
+        new SpaceMeasure('20', Distance.CM),
+        new SpaceMeasure('15', Distance.CM),
+        new SpaceMeasure('10', Distance.CM),
+        new WeightMeasure('20', Weight.KG),
     );
-    expect(physicalAttributes.metricVolume).toStrictEqual(new SpaceMeasure('0.003', TriDimensionalSpace.M3));
+    expect(physicalAttributes.metricVolume).toStrictEqual(new SpaceMeasure('0.003', Volume.M3));
 })
 
 test('Should have density 100 when object is 100x30x10cm and weights 3kg', () => {
     const physicalAttributes = new PhysicalAttributes(
-        new SpaceMeasure('100', SingleDimensionalSpace.CM),
-        new SpaceMeasure('30', SingleDimensionalSpace.CM),
-        new SpaceMeasure('10', SingleDimensionalSpace.CM),
-        new WeightMeasure(3, WeightMeasureUnit.KG),
+        new SpaceMeasure('100', Distance.CM),
+        new SpaceMeasure('30', Distance.CM),
+        new SpaceMeasure('10', Distance.CM),
+        new WeightMeasure(3, Weight.KG),
     );
     expect(physicalAttributes.kilogramMetricDensity).toStrictEqual(new Decimal('100'));
 })

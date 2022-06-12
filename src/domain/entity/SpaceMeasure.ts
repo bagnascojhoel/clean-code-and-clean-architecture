@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import { BiDimensionalSpace, SingleDimensionalSpace, SpaceMeasureUnit, SpaceMeasureUnitType, TriDimensionalSpace } from "./SpaceMeasureUnit";
+import { Area, Distance, SpaceMeasureUnit, SpaceMeasureUnitType, Volume } from "./MeasureUnit";
 
 export default class SpaceMeasure {
     private availableTargetUnits: SpaceMeasureUnitType;
@@ -20,9 +20,9 @@ export default class SpaceMeasure {
     }
 
     private evaluateTargetUnit(): SpaceMeasureUnitType {
-        let allowedTargetUnits: SpaceMeasureUnitType = SingleDimensionalSpace;
-        if (Object.keys(BiDimensionalSpace).includes(this.unit.key)) allowedTargetUnits = BiDimensionalSpace;
-        else if (Object.keys(TriDimensionalSpace).includes(this.unit.key)) allowedTargetUnits = TriDimensionalSpace;
+        let allowedTargetUnits: SpaceMeasureUnitType = Distance;
+        if (Object.keys(Area).includes(this.unit.key)) allowedTargetUnits = Area;
+        else if (Object.keys(Volume).includes(this.unit.key)) allowedTargetUnits = Volume;
         return allowedTargetUnits;
     }
 

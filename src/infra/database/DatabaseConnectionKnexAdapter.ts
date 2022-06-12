@@ -11,8 +11,16 @@ export default class DatabaseConnectionKnexAdapter implements DatabaseConnection
         this.knex = knex(knexProperties.getConfig(process.env.NODE_ENV ?? 'development'));
     }
 
-    async query(statement: string, params?: any): Promise<any> {
-        return this.knex.raw(statement, params);
+    public async query(statement: string, params?: any): Promise<any> {
+        return await this.knex.raw(statement, params);
+    }
+
+    public async migrate(): Promise<any> {
+        await this.knex.migrate.latest()
+    }
+
+    public async clear(table: string): Promise<any> {
+        await this.knex.truncate().from(table)
     }
 
 }

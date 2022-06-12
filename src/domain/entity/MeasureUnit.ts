@@ -1,4 +1,19 @@
-export const SingleDimensionalSpace = {
+export const Weight = {
+    MG: {
+        conversionFactor: '0.001'
+    },
+    G: {
+        conversionFactor: '1'
+    },
+    KG: {
+        conversionFactor: '1000'
+    },
+    T: {
+        conversionFactor: '1000000'
+    },
+} as const;
+
+export const Distance = {
     MM: {
         key: 'MM',
         conversionFactor: '0.001',
@@ -17,7 +32,7 @@ export const SingleDimensionalSpace = {
     }
 } as const;
 
-export const BiDimensionalSpace = {
+export const Area = {
     MM2: {
         key: 'MM2',
         conversionFactor: '0.000001',
@@ -32,7 +47,7 @@ export const BiDimensionalSpace = {
     },
 } as const;
 
-export const TriDimensionalSpace = {
+export const Volume = {
     MM3: {
         key: 'MM3',
         conversionFactor: '0.000000001',
@@ -48,8 +63,10 @@ export const TriDimensionalSpace = {
 } as const;
 
 export type SpaceMeasureUnit =
-    typeof SingleDimensionalSpace[keyof typeof SingleDimensionalSpace]
-    | typeof BiDimensionalSpace[keyof typeof BiDimensionalSpace]
-    | typeof TriDimensionalSpace[keyof typeof TriDimensionalSpace];
+    typeof Distance[keyof typeof Distance]
+    | typeof Area[keyof typeof Area]
+    | typeof Volume[keyof typeof Volume];
 
-export type SpaceMeasureUnitType = typeof SingleDimensionalSpace | typeof BiDimensionalSpace | typeof TriDimensionalSpace
+export type SpaceMeasureUnitType = typeof Distance | typeof Area | typeof Volume
+
+export type WeightMeasureUnit = typeof Weight[keyof typeof Weight]

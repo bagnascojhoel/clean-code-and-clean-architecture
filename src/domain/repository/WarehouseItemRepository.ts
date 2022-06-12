@@ -1,5 +1,7 @@
-import WarehouseItem from "../entity/WarehouseItem";
+import WarehouseItem, { WarehouseItemId } from "../entity/WarehouseItem";
 
 export default interface WarehouseItemRepository {
-    create(warehouseItem: WarehouseItem): number;
+    findAll(ids: WarehouseItemId[]): Promise<WarehouseItem[]>
+    findOne(id: WarehouseItemId): Promise<WarehouseItem>
+    insert(warehouseItem: WarehouseItem): Promise<WarehouseItemId>
 }

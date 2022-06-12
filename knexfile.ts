@@ -1,10 +1,9 @@
-import { Knex } from "knex";
-
-// Update with your config settings.
+import type { Knex } from "knex"
 
 const KNEX_CONFIG: { [key: string]: Knex.Config } = {
     test: {
         client: "sqlite3",
+        // debug: true,
         connection: {
             filename: "test.sqlite3"
         }
@@ -12,6 +11,7 @@ const KNEX_CONFIG: { [key: string]: Knex.Config } = {
 
     development: {
         client: "sqlite3",
+        // debug: true,
         connection: {
             filename: "dev.sqlite3"
         }
@@ -50,4 +50,4 @@ const KNEX_CONFIG: { [key: string]: Knex.Config } = {
     }
 }
 
-export default KNEX_CONFIG;
+export default KNEX_CONFIG

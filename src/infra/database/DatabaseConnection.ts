@@ -1,5 +1,5 @@
 export default interface DatabaseConnection {
-    query(statement: string, params?: any): any
+    query(statement: string, params?: any): Promise<any>
+    migrate(): Promise<any>
+    clear(table: string): Promise<any>
 }
-
-// TODO Implement without migrations, just manual database creation

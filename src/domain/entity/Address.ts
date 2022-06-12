@@ -1,5 +1,5 @@
+import { Distance } from "./MeasureUnit";
 import SpaceMeasure from "./SpaceMeasure";
-import { SingleDimensionalSpace } from "./SpaceMeasureUnit";
 
 export default class Address {
 
@@ -8,7 +8,7 @@ export default class Address {
     }
 
     public calculateDistance(otherAddress: Address): SpaceMeasure {
-        return new SpaceMeasure('1000', SingleDimensionalSpace.KM);
+        return new SpaceMeasure('1000', Distance.KM);
     }
 
 }

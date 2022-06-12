@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import { WeightMeasureUnit } from "./WeightMeasureUnit";
+import { WeightMeasureUnit } from "./MeasureUnit";
 
 export default class WeightMeasure {
     readonly value: Decimal;

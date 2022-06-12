@@ -1,20 +1,22 @@
 import Decimal from "decimal.js";
 import { DateTime } from "luxon";
-import Prototype from "../Prototype";
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
 import Freight from "./Freight";
+import OrderCode from "./OrderCode";
 import OrderItem from "./OrderItem";
-
-const SEQUENTIAL_ID_CODE_SECTION_LENGTH = 8;
 
 export default class Order {
     readonly cpf: Cpf;
-    readonly createdAt: DateTime;
-    readonly items: OrderItem[];
 
-    constructor(createdAt: DateTime, cpf: string, items: OrderItem[]) {
+    constructor(
+        readonly code: OrderCode,
+        readonly createdAt: DateTime,
+        cpf: string,
+        readonly items: OrderItem[]
+    ) {
         if (items.length === 0) throw new Error('Order must have at least one item')
+        this.code = code
         this.cpf = new Cpf(cpf);
         this.createdAt = createdAt;
         this.items = items;
@@ -26,11 +28,6 @@ export default class Order {
         return itemsTotal
             .sub(couponDiscount)
             .plus(freight.calculatePrice());
-    }
-
-    public generateCode(sequentialId: number): string {
-        const paddedId = new Decimal(sequentialId).toString().padStart(SEQUENTIAL_ID_CODE_SECTION_LENGTH, '0');
-        return `${this.createdAt.toFormat('yyyy')}${paddedId}`;
     }
 
 }
