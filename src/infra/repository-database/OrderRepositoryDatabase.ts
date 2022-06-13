@@ -73,7 +73,12 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         `
         await this.connection.query(
             insertOrderStatement,
-            [order.code.sequentialId, order.code.value, order.cpf.value, order.createdAt.toISO()]
+            [
+                order.code.sequentialId,
+                order.code.value,
+                order.cpf.value,
+                order.createdAt.toUTC().toISO()
+            ]
         )
         await this.insertOrderItems(order.code, order.items)
         return order.code

@@ -72,7 +72,7 @@ it('Should be null when finding non-existing order', async () => {
     expect(actual).toBeNull()
 })
 
-it('Should save with ISO creation', async () => {
+it('Should save created at date as UTC in ISO format', async () => {
     const ORDER_INSERT_CALL_INDEX = 0
     const PARAMETERS_INDEX = 1
     const CREATED_AT_FIELD_INDEX = 3
@@ -82,5 +82,5 @@ it('Should save with ISO creation', async () => {
     await repository.save(order)
     expect(stubbedConnection.query.called).toBeTruthy()
     expect(stubbedConnection.query.args[ORDER_INSERT_CALL_INDEX][PARAMETERS_INDEX][CREATED_AT_FIELD_INDEX])
-        .toBe(order.createdAt.toISO())
+        .toBe(order.createdAt.toUTC().toISO())
 })
