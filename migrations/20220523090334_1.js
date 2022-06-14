@@ -1,6 +1,6 @@
 const CREATE_TABLE_ORDER = `
     CREATE TABLE \`order\` (
-        order_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id    INTEGER PRIMARY KEY NOT NULL,
         code        VARCHAR(12) UNIQUE,
         buyer_cpf   VARCHAR(11) NOT NULL,
         created_at  DATETIME NOT NULL
@@ -23,11 +23,11 @@ const CREATE_TABLE_WAREHOUSE_ITEM = `
 const CREATE_TABLE_ORDER_ITEM = `
     CREATE TABLE order_item (
         order_item_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_code          VARCHAR(12) NOT NULL,
+        order_id            INTEGER NOT NULL,
         warehouse_item_id   INTEGER NOT NULL,
         paid_unitary_price  DECIMAL(10,3) NOT NULL,
         quantity            DECIMAL(10,3) NOT NULL,
-        FOREIGN KEY (order_code) REFERENCES \`order\` (code),
+        FOREIGN KEY (order_id) REFERENCES \`order\` (id),
         FOREIGN KEY (warehouse_item_id) REFERENCES warehouse_item (warehouse_item_id)
     )
 `
@@ -59,6 +59,16 @@ const CREATE_TABLE_COUPON = `
     )
 `
 
+const CREATE_TABLE_APPLIED_COUPON = `
+    CREATE TABLE applied_coupon (
+        applied_coupon_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+        coupon_id           INTEGER NOT NULL,
+        order_id            INTEGER NOT NULL,          
+        FOREIGN KEY (coupon_id) REFERENCES coupon (coupon_id),
+        FOREIGN KEY (order_id) REFERENCES \`order\` (order_id)   
+    )
+`
+
 exports.up = async function up(knex) {
     await knex.raw(CREATE_TABLE_ORDER)
     await knex.raw(CREATE_TABLE_WAREHOUSE_ITEM)
@@ -66,6 +76,7 @@ exports.up = async function up(knex) {
     await knex.raw(CREATE_TABLE_ADDRESS)
     await knex.raw(CREATE_TABLE_FREIGHT)
     await knex.raw(CREATE_TABLE_COUPON)
+    await knex.raw(CREATE_TABLE_APPLIED_COUPON)
 }
 
 exports.down = async function down(knex) {
@@ -75,5 +86,6 @@ exports.down = async function down(knex) {
     await knex.schema.dropTableIfExists('address')
     await knex.schema.dropTableIfExists('freight')
     await knex.schema.dropTableIfExists('coupon')
+    await knex.schema.dropTableIfExists('applied_coupon')
 }
 

@@ -115,10 +115,26 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         FROM ${TABLE_ORDER_ITEM} oi
         JOIN ${TABLE_WAREHOUSE_ITEM} wi
         ON oi.warehouse_item_id = wi.warehouse_item_id
-        WHERE oi.order_code = ?
+        WHERE oi.order_id = ?
         `
-        const queryResult: OrderItemRow[] = await this.connection.query(statement, orderCode.value)
+        const queryResult: OrderItemRow[] = await this.connection.query(statement, orderCode.sequentialId)
         return queryResult.map(this.createOrderItem)
+    }
+
+    private async insertOrderItems(orderCode: OrderCode, items: OrderItem[]): Promise<any> {
+        const statementPrefix = `
+        INSERT INTO ${TABLE_ORDER_ITEM}
+            (order_id, warehouse_item_id, paid_unitary_price, quantity)
+        VALUES
+        `
+        const statementValues: string[] = []
+        const values = []
+        for (let item of items) {
+            statementValues.push(`(?, ?, ?, ?)`)
+            values.push(orderCode.sequentialId, item.warehouseItem.id, item.paidUnitaryPrice.toNumber(), item.quantity())
+        }
+        const statement = statementPrefix + statementValues.join(',')
+        await this.connection.query(statement, values)
     }
 
     private createOrderItem(orderItemRow: OrderItemRow): OrderItem {
@@ -137,21 +153,4 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         )
         return new OrderItem(warehouseItem, new Decimal(orderItemRow.paidUnitaryPrice), orderItemRow.orderItemQuantity)
     }
-
-    private async insertOrderItems(orderCode: OrderCode, items: OrderItem[]): Promise<any> {
-        const statementPrefix = `
-        INSERT INTO ${TABLE_ORDER_ITEM}
-            (order_code, warehouse_item_id, paid_unitary_price, quantity)
-        VALUES
-        `
-        const statementValues: string[] = []
-        const values = []
-        for (let item of items) {
-            statementValues.push(`(?, ?, ?, ?)`)
-            values.push(orderCode.value, item.warehouseItem.id, item.paidUnitaryPrice.toNumber(), item.quantity())
-        }
-        const statement = statementPrefix + statementValues.join(',')
-        await this.connection.query(statement, values)
-    }
-
 }
