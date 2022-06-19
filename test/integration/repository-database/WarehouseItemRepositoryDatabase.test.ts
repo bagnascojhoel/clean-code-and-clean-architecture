@@ -6,12 +6,14 @@ import WarehouseItemMother from "../../object-mother/WarehouseItemMother"
 const connection = new DatabaseConnectionKnexAdapter()
 const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection)
 
-afterEach(() => {
+afterEach(async () => {
     Sinon.restore()
-    return Promise.all([
+    await Promise.all([
         connection.clear('warehouse_item'),
     ])
 })
+
+afterAll(async () => connection.destroyConnection())
 
 it('Should insert warehouse item', async () => {
     const actual = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
@@ -23,7 +25,12 @@ it('Should contain warehouse item with given id', async () => {
     const cameraOneId = await warehouseItemRepository.insert(camera)
     const actual = await warehouseItemRepository.findOne(cameraOneId)
     expect(actual).toBeTruthy()
-    expect(actual.id).toBe(cameraOneId)
+    expect(actual?.id).toBe(cameraOneId)
+})
+
+it('Should be null when finding a non-existent warehouse item', async () => {
+    const actual = await warehouseItemRepository.findOne(999)
+    expect(actual).toBe(null)
 })
 
 it('Should contain warehouse items with given id\'s', async () => {

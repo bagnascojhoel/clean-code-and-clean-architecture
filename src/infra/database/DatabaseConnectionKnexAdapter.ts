@@ -23,4 +23,7 @@ export default class DatabaseConnectionKnexAdapter implements DatabaseConnection
         await this.knex.truncate().from(table)
     }
 
+    public async destroyConnection(): Promise<any> {
+        await this.knex.destroy()
+    }
 }

@@ -4,6 +4,7 @@ const KNEX_CONFIG: { [key: string]: Knex.Config } = {
     test: {
         client: "sqlite3",
         // debug: true,
+        useNullAsDefault: true,
         connection: {
             filename: "test.sqlite3"
         }

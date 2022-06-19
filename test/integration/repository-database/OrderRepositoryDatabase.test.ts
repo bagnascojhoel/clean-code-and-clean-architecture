@@ -12,20 +12,22 @@ import OrderMother from "../../object-mother/OrderMother";
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother";
 
 const connection = new DatabaseConnectionKnexAdapter()
-const repository = new OrderRepositoryDatabase(connection)
+const orderRepository = new OrderRepositoryDatabase(connection)
 
-afterEach(() => {
+afterEach(async () => {
     Sinon.restore()
-    return Promise.all([
+    await Promise.all([
         connection.clear('order_item'),
-        connection.clear('order'),
         connection.clear('warehouse_item'),
+        connection.clear('order'),
     ])
 })
 
+afterAll(async () => connection.destroyConnection())
+
 it('Should be order code when saving an order', async () => {
     const order = OrderMother.createRubensOrder()
-    const actual = await repository.save(order)
+    const actual = await orderRepository.save(order)
     expect(actual).toBe(order.code)
 })
 
@@ -38,13 +40,13 @@ it('Should query connection with correct amount of values when inserting value',
 })
 
 it('Should return the total quantity of registries', async () => {
-    await repository.save(OrderMother.createRubensOrder())
-    const actual = await repository.count()
+    await orderRepository.save(OrderMother.createRubensOrder())
+    const actual = await orderRepository.count()
     expect(actual).toBeGreaterThanOrEqual(1)
 })
 
 it('Should query connection when counting', async () => {
-    await repository.save(OrderMother.createRubensOrder())
+    await orderRepository.save(OrderMother.createRubensOrder())
     const stubbedConnection = Sinon.stub(connection)
     const injectedRepository = new OrderRepositoryDatabase(stubbedConnection)
     stubbedConnection.query.returns(Promise.resolve([{ total: 1 }]))
@@ -62,13 +64,13 @@ it('Should find order by order code', async () => {
         CpfMother.createOfRubens(),
         [new OrderItem(warehouseItem, new Decimal(10), 12)]
     )
-    const orderCode = await repository.save(order)
-    const actual = await repository.findOne(orderCode)
+    const orderCode = await orderRepository.save(order)
+    const actual = await orderRepository.findOne(orderCode)
     expect(actual).toEqual(order)
 })
 
 it('Should be null when finding non-existing order', async () => {
-    const actual = await repository.findOne(new OrderCode(1, 1000))
+    const actual = await orderRepository.findOne(new OrderCode(1, 1000))
     expect(actual).toBeNull()
 })
 

@@ -1,5 +1,6 @@
 import Coupon from "../entity/Coupon";
 
 export default interface CouponRepository {
-    save(coupon: Coupon): Promise<any>
+    getOne(couponName: string): Promise<Coupon>;
+    insert(coupon: Coupon): Promise<any>;
 }

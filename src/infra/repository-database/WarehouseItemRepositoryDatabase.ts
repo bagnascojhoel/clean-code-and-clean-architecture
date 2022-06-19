@@ -48,14 +48,14 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
         return warehouseItemId
     }
 
-    public async findOne(id: number): Promise<WarehouseItem> {
+    public async findOne(id: number): Promise<WarehouseItem | null> {
         const statement = `
             SELECT ${TABLE_WAREHOUSE_ITEM_COLUMNS}
             FROM ${TABLE_WAREHOUSE_ITEM}
             WHERE id = ?
         `
-        const queryResult: WarehouseItemRow[] = await this.connection.query(statement, id)
-        return this.createWarehouseItem(queryResult[0])
+        const [warehouseItemRow]: WarehouseItemRow[] = await this.connection.query(statement, id)
+        return warehouseItemRow ? this.createWarehouseItem(warehouseItemRow) : null
     }
 
     public async findAll(ids: number[]): Promise<WarehouseItem[]> {
