@@ -15,13 +15,15 @@ export default class CouponRepositoryDatabase implements CouponRepository {
         await this.connection.query(insertStatement, params)
     }
 
-    async getOne(couponName: string): Promise<Coupon> {
+    async getOne(couponName: string): Promise<Coupon | undefined> {
         const statement = `SELECT name, discount_percentage discountPercentage, expires_at expiresAt FROM coupon WHERE name = ?`
         const [queryResult]: { name: string, discountPercentage: number, expiresAt: string }[] = await this.connection.query(statement, [couponName])
-        return new Coupon(
-            queryResult.name,
-            new Decimal(queryResult.discountPercentage),
-            DateTime.fromISO(queryResult.expiresAt)
-        )
+
+        return queryResult
+            ? new Coupon(
+                queryResult.name,
+                new Decimal(queryResult.discountPercentage),
+                DateTime.fromISO(queryResult.expiresAt))
+            : undefined
     }
 }

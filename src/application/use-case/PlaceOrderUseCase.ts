@@ -39,6 +39,7 @@ export default class PlaceOrderUseCase {
 
     private async applyCoupon(order: Order, couponName: string): Promise<any> {
         const coupon = await this.couponRepository.getOne(couponName)
+        if (!coupon) throw 'Coupon does not exist'
         const appliedCoupon = new AppliedCoupon(coupon, order)
         await this.appliedCouponRepository.insert(appliedCoupon)
     }

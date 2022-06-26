@@ -45,6 +45,16 @@ it('Should throw error when placing order with unknown warehouse item', () => {
     expect(async () => await placeOrderUseCase.execute(orderContent)).rejects.toEqual('Warehouse item does not exist')
 })
 
+it('Should throw error when placing order with non-existent coupon', async () => {
+    const warehouseItemId = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    const orderContent = {
+        cpf: CpfMother.createOfRubens(),
+        items: [{ warehouseItemId, quantity: 10 }],
+        coupon: 'MYCOUPON'
+    }
+    expect(async () => await placeOrderUseCase.execute(orderContent)).rejects.toEqual('Coupon does not exist')
+})
+
 it('Should save coupon when placing order with one', async () => {
     const warehouseItemId = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
     const coupon = CouponMother.create12Off()

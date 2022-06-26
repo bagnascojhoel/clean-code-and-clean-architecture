@@ -8,6 +8,13 @@ import WarehouseItemMother from "../../object-mother/WarehouseItemMother"
 const connection = new DatabaseConnectionKnexAdapter()
 const warehouseRepository = new WarehouseItemRepositoryDatabase(connection)
 
+
+afterEach(async () => {
+    await Promise.all([
+        connection.clear('warehouse_item')
+    ])
+})
+
 afterAll(() => {
     connection.destroyConnection()
 })

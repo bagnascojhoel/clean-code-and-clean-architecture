@@ -32,3 +32,9 @@ test('Should get one coupon of given name', async () => {
     const actual = await couponRepository.getOne(couponName)
     expect(actual).toEqual(coupon)
 })
+
+test('Should be undefined when getting an non-existent coupon', async () => {
+    const couponName = '12off'
+    const actual = await couponRepository.getOne(couponName)
+    expect(actual).toEqual(undefined)
+})
