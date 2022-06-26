@@ -24,7 +24,7 @@ export default class PlaceOrderUseCase {
         this.appliedCouponRepository = appliedCouponRepository
         this.couponRepository = couponRepository
     }
-    // TODO This approach of defining the sequentialId only works for a single-threaded system. If there
+    // NOTE This approach of defining the sequentialId only works for a single-threaded system. If there
     //  are multiple application that can place orders, then there will be collision.
     public async execute({ cpf, items, coupon: couponName }: Input): Promise<any> {
         const orderItems = await this.createOrderItems(items)

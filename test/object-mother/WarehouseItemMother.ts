@@ -13,4 +13,14 @@ function createCamera(): WarehouseItem {
     );
 }
 
-export default { createCamera }
+function createFridge(): WarehouseItem {
+    return new WarehouseItem(
+        2,
+        'Conss 445JKLP1',
+        1255,
+        new Decimal('3000'),
+        PhysicalAttributesMother.createFridge()
+    )
+}
+
+export default { createCamera, createFridge }
