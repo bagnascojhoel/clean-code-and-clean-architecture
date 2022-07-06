@@ -4,23 +4,20 @@ import Order from "../../../src/domain/entity/Order";
 import OrderCode from "../../../src/domain/entity/OrderCode";
 import OrderItem from "../../../src/domain/entity/OrderItem";
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter";
-import OrderRepositoryDatabase from "../../../src/infra/repository-database/OrderRepositoryDatabase"
+import OrderRepositoryDatabase from "../../../src/infra/repository-database/OrderRepositoryDatabase";
 import WarehouseItemRepositoryDatabase from "../../../src/infra/repository-database/WarehouseItemRepositoryDatabase";
 import CpfMother from "../../object-mother/CpfMother";
 import DateTimeMother from "../../object-mother/DateTimeMother";
 import OrderMother from "../../object-mother/OrderMother";
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother";
+import cleanUpDatabase from "../cleanUpDatabase";
 
 const connection = new DatabaseConnectionKnexAdapter()
 const orderRepository = new OrderRepositoryDatabase(connection)
 
 afterEach(async () => {
     Sinon.restore()
-    await Promise.all([
-        connection.clear('order_item'),
-        connection.clear('warehouse_item'),
-        connection.clear('order'),
-    ])
+    await cleanUpDatabase(connection)
 })
 
 afterAll(async () => connection.destroyConnection())
@@ -54,7 +51,7 @@ it('Should query connection when counting', async () => {
     expect(stubbedConnection.query.called).toBeTruthy()
 })
 
-it('Should find order by order code', async () => {
+it('Should find order by its code', async () => {
     const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection)
     const warehouseItem = WarehouseItemMother.createCamera()
     await warehouseItemRepository.insert(warehouseItem)
@@ -77,7 +74,7 @@ it('Should be null when finding non-existing order', async () => {
 it('Should save created at date as UTC in ISO format', async () => {
     const ORDER_INSERT_CALL_INDEX = 0
     const PARAMETERS_INDEX = 1
-    const CREATED_AT_FIELD_INDEX = 3
+    const CREATED_AT_FIELD_INDEX = 2
     const stubbedConnection = Sinon.stub(new DatabaseConnectionKnexAdapter())
     const repository = new OrderRepositoryDatabase(stubbedConnection)
     const order = OrderMother.createRubensOrder()

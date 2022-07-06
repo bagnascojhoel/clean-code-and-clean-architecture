@@ -1,16 +1,14 @@
-import Decimal from "decimal.js";
 import { DateTime } from "luxon";
 import AppliedCoupon from "../../domain/entity/AppliedCoupon";
-import Coupon from "../../domain/entity/Coupon";
-import Order from "../../domain/entity/Order"
+import Order from "../../domain/entity/Order";
 import OrderCode from "../../domain/entity/OrderCode";
 import OrderItem from "../../domain/entity/OrderItem";
-import { WarehouseItemId } from "../../domain/entity/WarehouseItem"
+import { WarehouseItemId } from "../../domain/entity/WarehouseItem";
 import AppliedCouponRepository from "../../domain/repository/AppliedCouponRepository";
 import CouponRepository from "../../domain/repository/CouponRepository";
-import OrderRepository from "../../domain/repository/OrderRepository"
+import OrderRepository from "../../domain/repository/OrderRepository";
 import WarehouseItemRepository from "../../domain/repository/WarehouseItemRepository";
-
+// TODO Use presenters
 export default class PlaceOrderUseCase {
 
     constructor(

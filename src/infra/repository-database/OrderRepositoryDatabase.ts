@@ -17,7 +17,6 @@ const TABLE_ORDER_ITEM = 'order_item'
 const TABLE_WAREHOUSE_ITEM = 'warehouse_item'
 
 const TABLE_ORDER_COLUMNS = `
-    o.order_id as orderId,
     o.code,
     o.buyer_cpf as buyerCpf,
     o.created_at as createdAt
@@ -38,7 +37,6 @@ const WAREHOUSE_ITEM_VALUES = `
 `
 
 type OrderRow = {
-    orderId: number
     code: string
     buyerCpf: string
     createdAt: string
@@ -67,14 +65,13 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     public async save(order: Order): Promise<OrderCode> {
         const insertOrderStatement = `
         INSERT INTO ${TABLE_ORDER}
-            (order_id, code, buyer_cpf, created_at)
+            (code, buyer_cpf, created_at)
         VALUES
-            (?, ?, ?, ?)
+            (?, ?, ?)
         `
         await this.connection.query(
             insertOrderStatement,
             [
-                order.code.sequentialId,
                 order.code.value,
                 order.cpf.value,
                 order.createdAt.toUTC().toISO()
@@ -90,24 +87,24 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         return total
     }
 
-    public async findOne(orderCode: OrderCode): Promise<Order | null> {
+    public async findOne(anOrderCode: OrderCode): Promise<Order | null> {
         const statementOrder = `
         SELECT ${TABLE_ORDER_COLUMNS}
         FROM ${TABLE_ORDER} as o
         WHERE o.code = ?
         `
-        const [orderRow]: OrderRow[] = await this.connection.query(statementOrder, orderCode.value)
+        const [orderRow]: OrderRow[] = await this.connection.query(statementOrder, anOrderCode.value)
         if (!orderRow) return null
-        const orderItems: OrderItem[] = await this.findOrderItems(orderCode)
+        const orderItems: OrderItem[] = await this.findOrderItems(anOrderCode)
         return new Order(
-            orderCode,
+            anOrderCode,
             DateTime.fromISO(orderRow.createdAt),
             orderRow.buyerCpf,
             orderItems
         )
     }
 
-    private async findOrderItems(orderCode: OrderCode): Promise<OrderItem[]> {
+    private async findOrderItems(anOrderCode: OrderCode): Promise<OrderItem[]> {
         const statement = `
         SELECT
             ${ORDER_ITEM_VALUES},
@@ -115,23 +112,23 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         FROM ${TABLE_ORDER_ITEM} oi
         JOIN ${TABLE_WAREHOUSE_ITEM} wi
         ON oi.warehouse_item_id = wi.warehouse_item_id
-        WHERE oi.order_id = ?
+        WHERE oi.order_code = ?
         `
-        const queryResult: OrderItemRow[] = await this.connection.query(statement, orderCode.sequentialId)
+        const queryResult: OrderItemRow[] = await this.connection.query(statement, anOrderCode.value)
         return queryResult.map(this.createOrderItem)
     }
 
     private async insertOrderItems(orderCode: OrderCode, items: OrderItem[]): Promise<any> {
         const statementPrefix = `
         INSERT INTO ${TABLE_ORDER_ITEM}
-            (order_id, warehouse_item_id, paid_unitary_price, quantity)
+            (order_code, warehouse_item_id, paid_unitary_price, quantity)
         VALUES
         `
         const statementValues: string[] = []
         const values = []
         for (let item of items) {
             statementValues.push(`(?, ?, ?, ?)`)
-            values.push(orderCode.sequentialId, item.warehouseItem.id, item.paidUnitaryPrice.toNumber(), item.quantity())
+            values.push(orderCode.value, item.warehouseItem.id, item.paidUnitaryPrice.toNumber(), item.quantity())
         }
         const statement = statementPrefix + statementValues.join(',')
         await this.connection.query(statement, values)

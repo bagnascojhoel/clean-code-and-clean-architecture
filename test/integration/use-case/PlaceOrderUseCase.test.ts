@@ -1,16 +1,14 @@
-import { DateTime, Settings } from "luxon";
 import Sinon from "sinon";
 import PlaceOrderUseCase, { Input } from "../../../src/application/use-case/PlaceOrderUseCase";
-import Coupon from "../../../src/domain/entity/Coupon";
-import Order from "../../../src/domain/entity/Order";
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter";
 import AppliedCouponRepositoryDatabase from "../../../src/infra/repository-database/AppliedCouponRepositoryDatabase";
 import CouponRepositoryDatabase from "../../../src/infra/repository-database/CouponRepositoryDatabase";
 import OrderRepositoryDatabase from "../../../src/infra/repository-database/OrderRepositoryDatabase";
 import WarehouseItemRepositoryDatabase from "../../../src/infra/repository-database/WarehouseItemRepositoryDatabase";
+import CouponMother from '../../object-mother/CouponMother';
 import CpfMother from "../../object-mother/CpfMother";
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother";
-import CouponMother from '../../object-mother/CouponMother'
+import cleanUpDatabase from "../cleanUpDatabase";
 
 const connection = new DatabaseConnectionKnexAdapter()
 const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection)
@@ -26,13 +24,7 @@ const placeOrderUseCase = new PlaceOrderUseCase(
 
 afterEach(async () => {
     Sinon.restore()
-    await Promise.all([
-        connection.clear('applied_coupon'),
-        connection.clear('order_item'),
-        connection.clear('warehouse_item'),
-        connection.clear('order'),
-        connection.clear('coupon')
-    ])
+    await cleanUpDatabase(connection)
 })
 
 afterAll(async () => connection.destroyConnection())

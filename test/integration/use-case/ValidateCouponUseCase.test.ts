@@ -1,12 +1,11 @@
 import Decimal from "decimal.js";
 import { DateTime, Duration } from "luxon";
 import Sinon from "sinon";
-import { validate } from "uuid";
 import ValidateCouponUseCase from "../../../src/application/use-case/ValidateCouponUseCase";
 import Coupon from "../../../src/domain/entity/Coupon";
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter";
 import CouponRepositoryDatabase from "../../../src/infra/repository-database/CouponRepositoryDatabase";
-import CouponMother from "../../object-mother/CouponMother";
+import cleanUpDatabase from "../cleanUpDatabase";
 
 const connection = new DatabaseConnectionKnexAdapter()
 const couponRepository = new CouponRepositoryDatabase(connection)
@@ -14,9 +13,7 @@ const validateCouponUseCase = new ValidateCouponUseCase(couponRepository)
 
 afterEach(async () => {
     Sinon.restore()
-    await Promise.all([
-        connection.clear('coupon')
-    ])
+    await cleanUpDatabase(connection)
 })
 
 afterAll(() => {

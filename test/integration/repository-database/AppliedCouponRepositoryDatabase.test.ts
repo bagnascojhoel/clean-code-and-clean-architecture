@@ -1,14 +1,12 @@
-import Decimal from "decimal.js"
 import Sinon from "sinon"
 import AppliedCoupon from "../../../src/domain/entity/AppliedCoupon"
-import Coupon from "../../../src/domain/entity/Coupon"
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter"
 import AppliedCouponRepositoryDatabase from "../../../src/infra/repository-database/AppliedCouponRepositoryDatabase"
 import CouponRepositoryDatabase from "../../../src/infra/repository-database/CouponRepositoryDatabase"
 import OrderRepositoryDatabase from "../../../src/infra/repository-database/OrderRepositoryDatabase"
 import CouponMother from "../../object-mother/CouponMother"
-import DateTimeMother from "../../object-mother/DateTimeMother"
 import OrderMother from "../../object-mother/OrderMother"
+import cleanUpDatabase from "../cleanUpDatabase"
 
 const connection = new DatabaseConnectionKnexAdapter()
 const orderRepository = new OrderRepositoryDatabase(connection)
@@ -17,11 +15,7 @@ const appliedCouponRepository = new AppliedCouponRepositoryDatabase(connection)
 
 afterEach(async () => {
     Sinon.restore()
-    await Promise.all([
-        connection.clear('applied_coupon'),
-        connection.clear('coupon'),
-        connection.clear('order'),
-    ])
+    await cleanUpDatabase(connection)
 })
 
 afterAll(async () => connection.destroyConnection())
@@ -48,6 +42,6 @@ it('Should insert applied coupon', async () => {
     const spiedQuery = Sinon.spy(connection, 'query')
     await appliedCouponRepository.insert(appliedCoupon)
     expect(spiedQuery.calledTwice).toBeTruthy()
-    expect(spiedQuery.withArgs(Sinon.match.any, [Sinon.match.number, order.code.sequentialId]).calledOnce).toBeTruthy()
+    expect(spiedQuery.withArgs(Sinon.match.any, [Sinon.match.number, order.code.value]).calledOnce).toBeTruthy()
     spiedQuery.restore()
 })

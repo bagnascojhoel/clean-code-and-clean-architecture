@@ -1,7 +1,6 @@
 const CREATE_TABLE_ORDER = `
     CREATE TABLE \`order\` (
-        order_id    INTEGER PRIMARY KEY NOT NULL,
-        code        VARCHAR(12) UNIQUE,
+        code        VARCHAR(12) PRIMARY KEY NOT NULL,
         buyer_cpf   VARCHAR(11) NOT NULL,
         created_at  DATETIME NOT NULL
     )
@@ -23,11 +22,11 @@ const CREATE_TABLE_WAREHOUSE_ITEM = `
 const CREATE_TABLE_ORDER_ITEM = `
     CREATE TABLE order_item (
         order_item_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id            INTEGER NOT NULL,
+        order_code          VARCHAR(12) NOT NULL,
         warehouse_item_id   INTEGER NOT NULL,
         paid_unitary_price  DECIMAL(10,3) NOT NULL,
         quantity            DECIMAL(10,3) NOT NULL,
-        FOREIGN KEY (order_id) REFERENCES \`order\` (id),
+        FOREIGN KEY (order_code) REFERENCES \`order\` (code),
         FOREIGN KEY (warehouse_item_id) REFERENCES warehouse_item (warehouse_item_id)
     )
 `
@@ -63,9 +62,9 @@ const CREATE_TABLE_APPLIED_COUPON = `
     CREATE TABLE applied_coupon (
         applied_coupon_id   INTEGER PRIMARY KEY AUTOINCREMENT,
         coupon_id           INTEGER NOT NULL,
-        order_id            INTEGER NOT NULL,          
+        order_code          VARCHAR(12) UNIQUE NOT NULL,          
         FOREIGN KEY (coupon_id) REFERENCES coupon (coupon_id),
-        FOREIGN KEY (order_id) REFERENCES \`order\` (order_id)   
+        FOREIGN KEY (order_code) REFERENCES \`order\` (order_code)   
     )
 `
 

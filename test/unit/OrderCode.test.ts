@@ -16,3 +16,7 @@ it('Should throw error when creationYear is negative', () => {
 it('Should throw error when sequentialId is greater than maximum length 8', () => {
     expect(() => new OrderCode(999999990, 2022)).toThrowError('Order code cannot handle this too large sequential ID')
 })
+
+it('Should be OrderCode with given value', () => {
+    expect(OrderCode.fromValue('ABC1234').value).toBe('ABC1234')
+})

@@ -1,18 +1,16 @@
 import Decimal from "decimal.js"
 import SimulateFreightUseCase from "../../../src/application/use-case/SimulateFreightUseCase"
-import WarehouseItem from "../../../src/domain/entity/WarehouseItem"
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter"
 import WarehouseItemRepositoryDatabase from "../../../src/infra/repository-database/WarehouseItemRepositoryDatabase"
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother"
+import cleanUpDatabase from "../cleanUpDatabase"
 
 const connection = new DatabaseConnectionKnexAdapter()
 const warehouseRepository = new WarehouseItemRepositoryDatabase(connection)
 
 
 afterEach(async () => {
-    await Promise.all([
-        connection.clear('warehouse_item')
-    ])
+    await cleanUpDatabase(connection)
 })
 
 afterAll(() => {
