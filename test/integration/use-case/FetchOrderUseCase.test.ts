@@ -40,3 +40,17 @@ it('Should fetch order', async () => {
     expect(actual?.code.value).toBe(generatedCode.value)
     expect(presenter.onNotFound.notCalled).toBeTruthy()
 })
+
+it('Should be not found when order does not exist', async () => {
+    const presenter = Sinon.spy({
+        onSuccess(order: Order) {
+
+        },
+        onNotFound() {
+
+        }
+    })
+    await fetchOrderUseCase.execute({ orderCode: 'unexistent' }, presenter)
+    expect(presenter.onNotFound.calledOnce).toBeTruthy()
+    expect(presenter.onSuccess.notCalled).toBeTruthy()
+})
