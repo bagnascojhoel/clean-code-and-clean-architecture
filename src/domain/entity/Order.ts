@@ -16,6 +16,7 @@ export default class Order {
         readonly items: OrderItem[]
     ) {
         if (items.length === 0) throw new Error('Order must have at least one item')
+        if (this.containsDuplicatedItems(items)) throw new Error('There shouldn\'t be more than one item of the same product')
         this.code = code
         this.cpf = new Cpf(cpf);
         this.createdAt = createdAt;
@@ -30,4 +31,11 @@ export default class Order {
             .plus(freight.calculatePrice());
     }
 
+    private containsDuplicatedItems(orderItems: OrderItem[]): boolean {
+        const distinct = new Set()
+        for (const v of orderItems)
+            if (distinct.has(v.warehouseItem.id)) return true
+            else distinct.add(v.warehouseItem.id)
+        return false
+    }
 }
