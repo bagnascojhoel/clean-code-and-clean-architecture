@@ -1,5 +1,4 @@
 import Decimal from "decimal.js";
-import { create } from "lodash";
 import { DateTime } from "luxon";
 import { Distance, Weight } from "../../domain/entity/MeasureUnit";
 import Order from "../../domain/entity/Order";
@@ -21,11 +20,11 @@ const TABLE_ORDER_COLUMNS = `
     o.buyer_cpf as buyerCpf,
     o.created_at as createdAt
 `
-const ORDER_ITEM_VALUES = `
+const TABLE_ORDER_ITEM_VALUES = `
     oi.paid_unitary_price as paidUnitaryPrice,
     oi.quantity as orderItemQuantity
 `
-const WAREHOUSE_ITEM_VALUES = `
+const TABLE_WAREHOUSE_ITEM_VALUES = `
     wi.warehouse_item_id as warehouseItemId,
     wi.description,
     wi.price as warehouseItemPrice,
@@ -43,6 +42,22 @@ type OrderRow = {
 }
 
 type OrderItemRow = {
+    paidUnitaryPrice: number
+    orderItemQuantity: number
+    warehouseItemId: number
+    warehouseItemPrice: number
+    description: string
+    warehouseItemQuantity: number
+    metricWidth: number
+    metricLength: number
+    metricHeight: number
+    kilogramWeight: number
+}
+
+type OrderAggregateRow = {
+    code: string
+    buyerCpf: string
+    createdAt: string
     paidUnitaryPrice: number
     orderItemQuantity: number
     warehouseItemId: number
@@ -104,11 +119,27 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         )
     }
 
+    public async findAll(): Promise<Order[]> {
+        const statement = `
+            SELECT
+                ${TABLE_ORDER_ITEM_VALUES},
+                ${TABLE_WAREHOUSE_ITEM_VALUES},
+                ${TABLE_ORDER_COLUMNS}
+            FROM ${TABLE_ORDER} as o
+            JOIN ${TABLE_ORDER_ITEM} as oi
+            ON o.code = oi.order_code
+            JOIN ${TABLE_WAREHOUSE_ITEM} as wi
+            ON oi.warehouse_item_id = wi.warehouse_item_id
+        `
+        const rows: OrderAggregateRow[] = await this.connection.query(statement)
+        return this.createOrderAggregates(rows)
+    }
+
     private async findOrderItems(anOrderCode: OrderCode): Promise<OrderItem[]> {
         const statement = `
         SELECT
-            ${ORDER_ITEM_VALUES},
-            ${WAREHOUSE_ITEM_VALUES}
+            ${TABLE_ORDER_ITEM_VALUES},
+            ${TABLE_WAREHOUSE_ITEM_VALUES}
         FROM ${TABLE_ORDER_ITEM} oi
         JOIN ${TABLE_WAREHOUSE_ITEM} wi
         ON oi.warehouse_item_id = wi.warehouse_item_id
@@ -134,7 +165,27 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         await this.connection.query(statement, values)
     }
 
-    private createOrderItem(orderItemRow: OrderItemRow): OrderItem {
+    private createOrderAggregates(ungroupedRows: OrderAggregateRow[]): Order[] {
+        const groupedRows: Map<string, OrderAggregateRow[]> = ungroupedRows.reduce((acc, cur) => {
+            const curGroup = acc.get(cur.code)
+            acc.set(cur.code, !curGroup ? [cur] : [...curGroup, cur])
+            return acc
+        }, new Map())
+        const result = []
+        for (const sameOrderRows of groupedRows.values()) {
+            const orderItems = sameOrderRows.map(this.createOrderItem)
+            const aRow = sameOrderRows[0]
+            result.push(new Order(
+                OrderCode.fromValue(aRow.code),
+                DateTime.fromISO(aRow.createdAt),
+                aRow.buyerCpf,
+                orderItems
+            ))
+        }
+        return result;
+    }
+
+    private createOrderItem(orderItemRow: OrderItemRow | OrderAggregateRow): OrderItem {
         const physicalAttributes = new PhysicalAttributes(
             new SpaceMeasure(orderItemRow.metricWidth, Distance.M),
             new SpaceMeasure(orderItemRow.metricLength, Distance.M),

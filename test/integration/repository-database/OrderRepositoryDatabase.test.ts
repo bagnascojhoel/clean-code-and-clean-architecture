@@ -14,6 +14,7 @@ import cleanUpDatabase from "../cleanUpDatabase";
 
 const connection = new DatabaseConnectionKnexAdapter()
 const orderRepository = new OrderRepositoryDatabase(connection)
+const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection)
 
 afterEach(async () => {
     Sinon.restore()
@@ -52,7 +53,6 @@ it('Should query connection when counting', async () => {
 })
 
 it('Should find order by its code', async () => {
-    const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection)
     const warehouseItem = WarehouseItemMother.createCamera()
     await warehouseItemRepository.insert(warehouseItem)
     const order = new Order(
@@ -82,4 +82,12 @@ it('Should save created at date as UTC in ISO format', async () => {
     expect(stubbedConnection.query.called).toBeTruthy()
     expect(stubbedConnection.query.args[ORDER_INSERT_CALL_INDEX][PARAMETERS_INDEX][CREATED_AT_FIELD_INDEX])
         .toBe(order.createdAt.toUTC().toISO())
+})
+
+it('Should be all stored orders when finding all', async () => {
+    await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    const order = OrderMother.createRubensOrder()
+    await orderRepository.save(order)
+    const actual = await orderRepository.findAll()
+    expect(actual).toStrictEqual([order])
 })
