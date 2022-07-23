@@ -1,47 +1,50 @@
 {
-  "name": "clean-code-architecture",
-  "version": "1.0.0",
-  "description": "I'm using this repository to persist all code I create while following the course [by Rodrigo Branas about Clean Code And Clean Architecture](https://app.branas.io/public/products).",
-  "main": "main.js",
-  "scripts": {
-    "up": "del ./dist && tsc && node ./dist/main",
-    "test": "del ./dist && jest unit && jest integration --runInBand",
-    "test:integration": "del ./dist && jest integration --runInBand",
-    "test:unit": "del ./dist && jest unit",
-    "test:coverage": "jest --coverage",
-    "migrate:latest": "knex --env development migrate:latest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bagnascojhoel/clean-code-architecture.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bagnascojhoel/clean-code-architecture/issues"
-  },
-  "homepage": "https://github.com/bagnascojhoel/clean-code-architecture#readme",
-  "dependencies": {
-    "@types/jest": "^27.4.1",
-    "@types/luxon": "^2.3.2",
-    "@types/sinon": "^10.0.11",
-    "decimal.js": "^10.3.1",
-    "del-cli": "^4.0.1",
-    "jest": "^27",
-    "knex": "^2.0.0",
-    "loadash": "^1.0.0",
-    "luxon": "^2.4.0",
-    "sinon": "^14.0.0",
-    "sqlite3": "^5.0.8",
-    "ts-jest": "^27.1.4",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.182",
-    "@types/sqlite3": "^3.1.8",
-    "@types/uuid": "^8.3.4",
-    "tsconfig-paths": "^4.0.0"
-  }
+    "name": "clean-code-architecture",
+    "version": "1.0.0",
+    "description": "I'm using this repository to persist all code I create while following the course [by Rodrigo Branas about Clean Code And Clean Architecture](https://app.branas.io/public/products).",
+    "main": "/application/main.ts",
+    "scripts": {
+        "up": "nodemon --watch 'src/' --exec 'ts-node ./src/application/main' -e ts",
+        "test": "del ./dist && jest unit && jest integration --runInBand",
+        "test:integration": "del ./dist && jest integration --runInBand",
+        "test:unit": "del ./dist && jest unit",
+        "test:coverage": "jest --coverage",
+        "migrate:latest": "knex --env development migrate:latest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bagnascojhoel/clean-code-architecture.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/bagnascojhoel/clean-code-architecture/issues"
+    },
+    "homepage": "https://github.com/bagnascojhoel/clean-code-architecture#readme",
+    "dependencies": {
+        "@types/express": "^4.17.13",
+        "@types/jest": "^27.4.1",
+        "@types/luxon": "^2.3.2",
+        "@types/sinon": "^10.0.11",
+        "decimal.js": "^10.3.1",
+        "del-cli": "^4.0.1",
+        "express": "^4.18.1",
+        "jest": "^27",
+        "knex": "^2.0.0",
+        "loadash": "^1.0.0",
+        "luxon": "^2.4.0",
+        "sinon": "^14.0.0",
+        "sqlite3": "^5.0.8",
+        "ts-jest": "^27.1.4",
+        "ts-node": "^10.7.0",
+        "typescript": "^4.6.4"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.182",
+        "@types/sqlite3": "^3.1.8",
+        "@types/uuid": "^8.3.4",
+        "nodemon": "^2.0.19",
+        "tsconfig-paths": "^4.0.0"
+    }
 }
