@@ -1,9 +1,13 @@
 import Order from "../../domain/entity/Order";
 import OrderCode from "../../domain/entity/OrderCode";
+import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import OrderRepository from "../../domain/repository/OrderRepository";
 
 export default class FetchOrderUseCase {
-    constructor(private orderRepository: OrderRepository) {
+    private readonly orderRepository: OrderRepository
+
+    constructor(private repositoryFactory: RepositoryFactory) {
+        this.orderRepository = repositoryFactory.createOrderRepository();
     }
 
     public async execute(input: FetchOrderInput, presenter: FetchOrderPresenter): Promise<void> {

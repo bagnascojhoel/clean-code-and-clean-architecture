@@ -1,13 +1,14 @@
 import Decimal from "decimal.js"
 import SimulateFreightUseCase from "../../../src/application/use-case/SimulateFreightUseCase"
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter"
-import WarehouseItemRepositoryDatabase from "../../../src/infra/repository-database/WarehouseItemRepositoryDatabase"
+import DatabaseRepositoryFactory from "../../../src/infra/repository-database/DatabaseRepositoryFactory"
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother"
 import cleanUpDatabase from "../cleanUpDatabase"
 
-const connection = new DatabaseConnectionKnexAdapter()
-const warehouseRepository = new WarehouseItemRepositoryDatabase(connection)
-
+const connection = new DatabaseConnectionKnexAdapter
+const repoFactory = new DatabaseRepositoryFactory(connection)
+const useCase = new SimulateFreightUseCase(repoFactory)
+const warehouseRepository = repoFactory.createWarehouseItemRepository()
 
 afterEach(async () => {
     await cleanUpDatabase(connection)
@@ -23,7 +24,6 @@ it('Should simulate freight using fixed origin and destination', async () => {
     await warehouseRepository.insert(camera)
     const fridge = WarehouseItemMother.createFridge()
     await warehouseRepository.insert(fridge)
-    var useCase = new SimulateFreightUseCase(warehouseRepository)
     var input = {
         content: [
             { warehouseItemId: camera.id, quantity: new Decimal(10) },

@@ -4,12 +4,13 @@ import Sinon from "sinon";
 import ValidateCouponUseCase from "../../../src/application/use-case/ValidateCouponUseCase";
 import Coupon from "../../../src/domain/entity/Coupon";
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter";
-import CouponRepositoryDatabase from "../../../src/infra/repository-database/CouponRepositoryDatabase";
+import DatabaseRepositoryFactory from "../../../src/infra/repository-database/DatabaseRepositoryFactory";
 import cleanUpDatabase from "../cleanUpDatabase";
 
-const connection = new DatabaseConnectionKnexAdapter()
-const couponRepository = new CouponRepositoryDatabase(connection)
-const validateCouponUseCase = new ValidateCouponUseCase(couponRepository)
+const connection = new DatabaseConnectionKnexAdapter
+const repoFactory = new DatabaseRepositoryFactory(connection)
+const validateCouponUseCase = new ValidateCouponUseCase(repoFactory)
+const couponRepository = repoFactory.createCouponRepository()
 
 afterEach(async () => {
     Sinon.restore()

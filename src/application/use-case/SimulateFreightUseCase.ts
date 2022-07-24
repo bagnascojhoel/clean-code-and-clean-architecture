@@ -3,14 +3,17 @@ import Address from "../../domain/entity/Address"
 import Freight from "../../domain/entity/Freight"
 import Freightable from "../../domain/entity/Freightable"
 import WarehouseItem, { WarehouseItemId } from "../../domain/entity/WarehouseItem"
+import RepositoryFactory from "../../domain/factory/RepositoryFactory"
 import WarehouseItemRepository from "../../domain/repository/WarehouseItemRepository"
 
 const DEFAULT_MINIMUM_PRICE = new Decimal(10)
 const ORIGIN = new Address()
 const DESTINATION = new Address()
 export default class SimulateFreightUseCase {
-    constructor(private warehouseRepository: WarehouseItemRepository) {
+    private readonly warehouseRepository: WarehouseItemRepository
 
+    constructor(private readonly repositoryFactory: RepositoryFactory) {
+        this.warehouseRepository = repositoryFactory.createWarehouseItemRepository()
     }
 
     async execute(input: SimulateFreightInput): Promise<Decimal> {

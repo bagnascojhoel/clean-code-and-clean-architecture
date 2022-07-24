@@ -2,16 +2,16 @@ import Sinon from "sinon"
 import FetchOrderUseCase, { FetchOrderPresenter } from "../../../src/application/use-case/FetchOrderUseCase"
 import Order from "../../../src/domain/entity/Order"
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter"
-import OrderRepositoryDatabase from "../../../src/infra/repository-database/OrderRepositoryDatabase"
-import WarehouseItemRepositoryDatabase from "../../../src/infra/repository-database/WarehouseItemRepositoryDatabase"
+import DatabaseRepositoryFactory from "../../../src/infra/repository-database/DatabaseRepositoryFactory"
 import OrderMother from "../../object-mother/OrderMother"
 import WarehouseItemMother from "../../object-mother/WarehouseItemMother"
 import cleanUpDatabase from "../cleanUpDatabase"
 
-const connection = new DatabaseConnectionKnexAdapter()
-const orderRepository = new OrderRepositoryDatabase(connection);
-const warehouseItemRepository = new WarehouseItemRepositoryDatabase(connection);
-const fetchOrderUseCase = new FetchOrderUseCase(orderRepository)
+const connection = new DatabaseConnectionKnexAdapter
+const repoFactory = new DatabaseRepositoryFactory(connection)
+const fetchOrderUseCase = new FetchOrderUseCase(repoFactory)
+const orderRepository = repoFactory.createOrderRepository()
+const warehouseItemRepository = repoFactory.createWarehouseItemRepository()
 const fakePresenter: FetchOrderPresenter = {
     onSuccess(order) { },
     onNotFound() { }

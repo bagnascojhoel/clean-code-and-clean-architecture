@@ -1,35 +1,46 @@
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
+import OrderRepository from "../../domain/repository/OrderRepository";
+import HttpServer from "../http-server/HttpServer";
 import OrderController from './controller/OrderController';
 import ErrorDto from "./dto/ErrorDto";
 
-const app = express()
+export default class RestApi {
+    constructor(
+        private httpServer: HttpServer,
+        private repositories: Repositories
+    ) { }
 
-// Context-path
-app.route('/api')
+    public start(port: number, contextPath: string = '/api') {
+        this.httpServer.withContextPath(contextPath)
+        this.setupControllers()
+        this.setupErrorHandlers()
+        this.httpServer.start(port, () => {
+            console.log(`Started application at port ${port}`);
+        })
+    }
 
-// Controllers
-app.use('/orders', OrderController)
+    private setupControllers() {
+        this.httpServer.mapRoute('/orders', OrderController.setup(this.httpServer.getRouter(), this.repositories.order))
+    }
 
-// Error handling
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.error(err.stack)
-    const status = 500
-    res
-        .status(status)
-        .json(ErrorDto.of(err.message ?? 'Unexpected error', status))
-})
+    private setupErrorHandlers() {
+        this.httpServer.withHandler((err: Error, req: Request, res: Response, next: NextFunction) => {
+            console.error(err.stack)
+            const status = 500
+            res
+                .status(status)
+                .json(ErrorDto.of(err.message ?? 'Unexpected error', status))
+        })
 
-// Not found
-app.use((req: Request, res: Response, next: NextFunction) => {
-    const status = 404
-    res
-        .status(status)
-        .json(ErrorDto.of(`Cannot ${req.method} ${req.path}`, status))
-})
+        this.httpServer.withHandler((req: Request, res: Response, next: NextFunction) => {
+            const status = 404
+            res
+                .status(status)
+                .json(ErrorDto.of(`Cannot ${req.method} ${req.path}`, status))
+        })
+    }
+}
 
-export function start(port: number) {
-    app.listen(port, () => {
-        console.log(`Started application at port ${port}`);
-
-    })
+export type Repositories = {
+    order: OrderRepository
 }

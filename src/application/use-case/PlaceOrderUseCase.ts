@@ -4,23 +4,23 @@ import Order from "../../domain/entity/Order";
 import OrderCode from "../../domain/entity/OrderCode";
 import OrderItem from "../../domain/entity/OrderItem";
 import { WarehouseItemId } from "../../domain/entity/WarehouseItem";
+import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import AppliedCouponRepository from "../../domain/repository/AppliedCouponRepository";
 import CouponRepository from "../../domain/repository/CouponRepository";
 import OrderRepository from "../../domain/repository/OrderRepository";
 import WarehouseItemRepository from "../../domain/repository/WarehouseItemRepository";
 // TODO Use presenters
 export default class PlaceOrderUseCase {
+    private readonly orderRepository: OrderRepository
+    private readonly warehouseItemRepository: WarehouseItemRepository
+    private readonly appliedCouponRepository: AppliedCouponRepository
+    private readonly couponRepository: CouponRepository
 
-    constructor(
-        private orderRepository: OrderRepository,
-        private warehouseItemRepository: WarehouseItemRepository,
-        private couponRepository: CouponRepository,
-        private appliedCouponRepository: AppliedCouponRepository
-    ) {
-        this.orderRepository = orderRepository
-        this.warehouseItemRepository = warehouseItemRepository
-        this.appliedCouponRepository = appliedCouponRepository
-        this.couponRepository = couponRepository
+    constructor(private readonly repositoryFactory: RepositoryFactory) {
+        this.orderRepository = repositoryFactory.createOrderRepository()
+        this.warehouseItemRepository = repositoryFactory.createWarehouseItemRepository()
+        this.appliedCouponRepository = repositoryFactory.createAppliedCouponRepository()
+        this.couponRepository = repositoryFactory.createCouponRepository()
     }
     // NOTE This approach of defining the sequentialId only works for a single-threaded system. If there
     //  are multiple application that can place orders, then there will be collision.

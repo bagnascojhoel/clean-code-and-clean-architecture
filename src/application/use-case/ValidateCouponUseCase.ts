@@ -1,8 +1,13 @@
 import { DateTime } from "luxon";
+import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import CouponRepository from "../../domain/repository/CouponRepository";
 
 export default class ValidateCouponUseCase {
-    constructor(private couponRepository: CouponRepository) { }
+    private readonly couponRepository: CouponRepository
+
+    constructor(private readonly repositoryFactory: RepositoryFactory) {
+        this.couponRepository = repositoryFactory.createCouponRepository()
+    }
 
     public async execute(couponName: string): Promise<boolean> {
         const couponFound = await this.couponRepository.getOne(couponName)
