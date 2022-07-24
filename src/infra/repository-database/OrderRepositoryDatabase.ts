@@ -1,19 +1,13 @@
 import Decimal from "decimal.js";
 import { DateTime } from "luxon";
-import { Distance, Weight } from "../../domain/entity/MeasureUnit";
 import Order from "../../domain/entity/Order";
 import OrderCode from '../../domain/entity/OrderCode';
 import OrderItem from "../../domain/entity/OrderItem";
-import PhysicalAttributes from "../../domain/entity/PhysicalAttributes";
-import SpaceMeasure from "../../domain/entity/SpaceMeasure";
-import WarehouseItem from "../../domain/entity/WarehouseItem";
-import WeightMeasure from "../../domain/entity/WeightMeasure";
 import OrderRepository from "../../domain/repository/OrderRepository";
 import DatabaseConnection from "../database/DatabaseConnection";
 
 const TABLE_ORDER = '`order`'
 const TABLE_ORDER_ITEM = 'order_item'
-const TABLE_WAREHOUSE_ITEM = 'warehouse_item'
 
 const TABLE_ORDER_COLUMNS = `
     o.code,
@@ -22,17 +16,8 @@ const TABLE_ORDER_COLUMNS = `
 `
 const TABLE_ORDER_ITEM_VALUES = `
     oi.paid_unitary_price as paidUnitaryPrice,
-    oi.quantity as orderItemQuantity
-`
-const TABLE_WAREHOUSE_ITEM_VALUES = `
-    wi.warehouse_item_id as warehouseItemId,
-    wi.description,
-    wi.price as warehouseItemPrice,
-    wi.quantity as warehouseItemQuantity,
-    wi.metric_width as metricWidth,
-    wi.metric_length as metricLength,
-    wi.metric_height as metricHeight,
-    wi.kilogram_weight as kilogramWeight
+    oi.quantity as orderItemQuantity,
+    oi.warehouse_item_id as warehouseItemId
 `
 
 type OrderRow = {
@@ -45,13 +30,6 @@ type OrderItemRow = {
     paidUnitaryPrice: number
     orderItemQuantity: number
     warehouseItemId: number
-    warehouseItemPrice: number
-    description: string
-    warehouseItemQuantity: number
-    metricWidth: number
-    metricLength: number
-    metricHeight: number
-    kilogramWeight: number
 }
 
 type OrderAggregateRow = {
@@ -61,13 +39,6 @@ type OrderAggregateRow = {
     paidUnitaryPrice: number
     orderItemQuantity: number
     warehouseItemId: number
-    warehouseItemPrice: number
-    description: string
-    warehouseItemQuantity: number
-    metricWidth: number
-    metricLength: number
-    metricHeight: number
-    kilogramWeight: number
 }
 
 export default class OrderRepositoryDatabase implements OrderRepository {
@@ -123,13 +94,10 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         const statement = `
             SELECT
                 ${TABLE_ORDER_ITEM_VALUES},
-                ${TABLE_WAREHOUSE_ITEM_VALUES},
                 ${TABLE_ORDER_COLUMNS}
             FROM ${TABLE_ORDER} as o
             JOIN ${TABLE_ORDER_ITEM} as oi
             ON o.code = oi.order_code
-            JOIN ${TABLE_WAREHOUSE_ITEM} as wi
-            ON oi.warehouse_item_id = wi.warehouse_item_id
         `
         const rows: OrderAggregateRow[] = await this.connection.query(statement)
         return this.createOrderAggregates(rows)
@@ -138,11 +106,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     private async findOrderItems(anOrderCode: OrderCode): Promise<OrderItem[]> {
         const statement = `
         SELECT
-            ${TABLE_ORDER_ITEM_VALUES},
-            ${TABLE_WAREHOUSE_ITEM_VALUES}
+            ${TABLE_ORDER_ITEM_VALUES}
         FROM ${TABLE_ORDER_ITEM} oi
-        JOIN ${TABLE_WAREHOUSE_ITEM} wi
-        ON oi.warehouse_item_id = wi.warehouse_item_id
         WHERE oi.order_code = ?
         `
         const queryResult: OrderItemRow[] = await this.connection.query(statement, anOrderCode.value)
@@ -159,7 +124,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         const values = []
         for (let item of items) {
             statementValues.push(`(?, ?, ?, ?)`)
-            values.push(orderCode.value, item.warehouseItem.id, item.paidUnitaryPrice.toNumber(), item.quantity())
+            values.push(orderCode.value, item.warehouseItemId, item.paidUnitaryPrice.toNumber(), item.quantity)
         }
         const statement = statementPrefix + statementValues.join(',')
         await this.connection.query(statement, values)
@@ -186,19 +151,9 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     }
 
     private createOrderItem(orderItemRow: OrderItemRow | OrderAggregateRow): OrderItem {
-        const physicalAttributes = new PhysicalAttributes(
-            new SpaceMeasure(orderItemRow.metricWidth, Distance.M),
-            new SpaceMeasure(orderItemRow.metricLength, Distance.M),
-            new SpaceMeasure(orderItemRow.metricHeight, Distance.M),
-            new WeightMeasure(orderItemRow.kilogramWeight, Weight.KG)
-        )
-        const warehouseItem = new WarehouseItem(
+        return new OrderItem(
             orderItemRow.warehouseItemId,
-            orderItemRow.description,
-            orderItemRow.warehouseItemQuantity,
-            new Decimal(orderItemRow.warehouseItemPrice),
-            physicalAttributes
-        )
-        return new OrderItem(warehouseItem, new Decimal(orderItemRow.paidUnitaryPrice), orderItemRow.orderItemQuantity)
+            new Decimal(orderItemRow.paidUnitaryPrice),
+            orderItemRow.orderItemQuantity)
     }
 }

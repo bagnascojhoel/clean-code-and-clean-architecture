@@ -1,6 +1,5 @@
-import { Area, Distance, SpaceMeasureUnit, Volume } from "../../src/domain/entity/MeasureUnit";
-import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
-
+import { Area, Distance, SpaceMeasureUnit, Volume } from "../../../src/domain/entity/MeasureUnit";
+import SpaceMeasure from "../../../src/domain/entity/SpaceMeasure";
 
 test('Should be created when using a space measure unit', () => {
     expect(() => new SpaceMeasure('40', Distance.CM)).not.toThrow();

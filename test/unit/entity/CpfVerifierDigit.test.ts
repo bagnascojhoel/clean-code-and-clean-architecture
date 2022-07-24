@@ -1,4 +1,4 @@
-import { CpfVerifierDigit } from "../../src/domain/entity/CpfVerifierDigit";
+import { CpfVerifierDigit } from "../../../src/domain/entity/CpfVerifierDigit";
 
 test('Should be true when CPF has invalid verifier digit', () => {
     const verifierDigit = new CpfVerifierDigit(10, 9);

@@ -1,17 +1,17 @@
 import Decimal from "decimal.js";
 import Address from "./Address";
-import Freightable from "./Freightable";
+import FreightableItem from "./FreightableItem";
 
 const DENSITY_FACTOR = 100;
 
 export default class Freight {
-    private items: Freightable[];
+    private items: FreightableItem[];
 
     constructor(
         readonly minimumPrice: Decimal,
         readonly origin: Address,
         readonly destination: Address,
-        items: Freightable[]
+        items: FreightableItem[]
     ) {
         this.minimumPrice = minimumPrice
         this.origin = origin;
@@ -21,10 +21,10 @@ export default class Freight {
 
     calculatePrice(): Decimal {
         const totalOnItems: Decimal = this.items.reduce<Decimal>((acc, item) => {
-            const metricVolume = item.unitaryPhysicalAttributes().metricVolume.value;
-            const kilogramMetricDensity = item.unitaryPhysicalAttributes().kilogramMetricDensity;
+            const metricVolume = item.physicalAttributes.metricVolume.value;
+            const kilogramMetricDensity = item.physicalAttributes.kilogramMetricDensity;
             const singleItemPricing = metricVolume.times(kilogramMetricDensity).div(DENSITY_FACTOR);
-            return acc.plus(singleItemPricing.times(item.quantity()));
+            return acc.plus(singleItemPricing.times(item.quantity));
         }, new Decimal(0));
         const distance = this.origin.calculateDistance(this.destination);
         const calculatedPrice = totalOnItems.times(distance.value);

@@ -1,4 +1,4 @@
-import OrderCode from "../../src/domain/entity/OrderCode"
+import OrderCode from "../../../src/domain/entity/OrderCode"
 
 it('Should have value 202200000001 when sequential is 1 and creation year is 2022', () => {
     const actual = new OrderCode(1, 2022)

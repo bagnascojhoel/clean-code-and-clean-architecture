@@ -15,16 +15,18 @@ afterEach(async () => {
 afterAll(async () => connection.destroyConnection())
 
 it('Should insert warehouse item', async () => {
-    const actual = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
-    expect(actual).toBeGreaterThanOrEqual(1)
+    const camera = WarehouseItemMother.createCamera()
+    await warehouseItemRepository.save(camera)
+    const actual = await connection.query(`select description from warehouse_item where warehouse_item_id = ${camera.id}`)
+    expect(actual[0].description).toBe(camera.description)
 })
 
 it('Should contain warehouse item with given id', async () => {
     const camera = WarehouseItemMother.createCamera()
-    const cameraOneId = await warehouseItemRepository.insert(camera)
-    const actual = await warehouseItemRepository.findOne(cameraOneId)
+    await warehouseItemRepository.save(camera)
+    const actual = await warehouseItemRepository.findOne(camera.id)
     expect(actual).toBeTruthy()
-    expect(actual?.id).toBe(cameraOneId)
+    expect(actual?.id).toBe(camera.id)
 })
 
 it('Should be null when finding a non-existent warehouse item', async () => {
@@ -34,10 +36,11 @@ it('Should be null when finding a non-existent warehouse item', async () => {
 
 it('Should contain warehouse items with given id\'s', async () => {
     const camera = WarehouseItemMother.createCamera()
-    const cameraOneId = await warehouseItemRepository.insert(camera)
-    const cameraTwoId = await warehouseItemRepository.insert(camera)
-    const actual = await warehouseItemRepository.findAll([cameraOneId, cameraTwoId])
+    await warehouseItemRepository.save(camera)
+    const fridge = WarehouseItemMother.createFridge()
+    await warehouseItemRepository.save(fridge)
+    const actual = await warehouseItemRepository.findAll([camera.id, fridge.id])
     expect(actual.length).toBe(2)
-    expect(actual[0].id).toBe(cameraOneId)
-    expect(actual[1].id).toBe(cameraTwoId)
+    expect(actual[0].id).toBe(camera.id)
+    expect(actual[1].id).toBe(fridge.id)
 })

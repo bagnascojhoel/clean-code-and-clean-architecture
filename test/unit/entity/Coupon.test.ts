@@ -1,7 +1,7 @@
 import Decimal from "decimal.js";
 import { DateTime } from "luxon";
-import Coupon from "../../src/domain/entity/Coupon";
-import DateTimeMother from "../object-mother/DateTimeMother";
+import Coupon from "../../../src/domain/entity/Coupon";
+import DateTimeMother from "../../object-mother/DateTimeMother";
 
 const THIRTY_PERCENT_DISCOUNT = new Decimal(0.3);
 test('Should throw error when discount percentage is negative', () => {

@@ -25,19 +25,28 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
         this.connection = connection;
     }
 
-    public async insert(warehouseItem: WarehouseItem): Promise<number> {
+    public async save(warehouseItem: WarehouseItem): Promise<void> {
         const statement = `
         INSERT INTO ${TABLE_WAREHOUSE_ITEM}
-            (description, quantity, price, metric_width, metric_length, metric_height, kilogram_weight)
+            (warehouse_item_id, description, quantity, price, metric_width, metric_length, metric_height, kilogram_weight)
         VALUES
-            (?, ?, ?, ?, ?, ?, ?)
-        RETURNING warehouse_item_id as warehouseItemId
+            (?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(warehouse_item_id) DO UPDATE SET
+            description = excluded.description,
+            quantity = excluded.quantity,
+            price = excluded.price,
+            metric_width = excluded.metric_width,
+            metric_length = excluded.metric_length,
+            metric_height = excluded.metric_height,
+            kilogram_weight = excluded.kilogram_weight
+
         `
-        const [{ warehouseItemId }] = await this.connection.query(
+        await this.connection.query(
             statement,
             [
+                warehouseItem.id,
                 warehouseItem.description,
-                warehouseItem.quantity,
+                warehouseItem.quantityOnStock,
                 warehouseItem.price,
                 warehouseItem.physicalAttributes.widthX.as(Distance.M).value,
                 warehouseItem.physicalAttributes.lengthY.as(Distance.M).value,
@@ -45,7 +54,6 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
                 warehouseItem.physicalAttributes.weight.as(Weight.KG).value
             ]
         )
-        return warehouseItemId
     }
 
     public async findOne(id: number): Promise<WarehouseItem | null> {

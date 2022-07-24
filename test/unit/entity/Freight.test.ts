@@ -1,10 +1,10 @@
 import Decimal from "decimal.js";
 import Sinon from "sinon";
-import Freight from "../../src/domain/entity/Freight";
-import { Distance } from "../../src/domain/entity/MeasureUnit";
-import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
-import AddressMother from "../object-mother/AddressMother";
-import FreightableMother from "../object-mother/FreightableMother";
+import Freight from "../../../src/domain/entity/Freight";
+import { Distance } from "../../../src/domain/entity/MeasureUnit";
+import SpaceMeasure from "../../../src/domain/entity/SpaceMeasure";
+import AddressMother from "../../object-mother/AddressMother";
+import FreightableMother from "../../object-mother/FreightableItemMother";
 
 afterEach(() => {
     Sinon.restore();

@@ -29,7 +29,7 @@ it('Should be empty list when there are no orders', async () => {
 
 
 it('Should be order list when there is at least one order', async () => {
-    await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    await warehouseItemRepository.save(WarehouseItemMother.createCamera())
     const order = OrderMother.createRubensOrder()
     await orderRepository.save(order);
     let actual: Order[] | undefined;

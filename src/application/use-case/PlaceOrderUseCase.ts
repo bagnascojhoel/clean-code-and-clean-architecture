@@ -31,6 +31,7 @@ export default class PlaceOrderUseCase {
         const orderCode = new OrderCode(orderQuantity + 1, creationTime.year)
         const order = new Order(orderCode, creationTime, cpf, orderItems)
         await this.orderRepository.save(order)
+
         if (couponName) await this.applyCoupon(order, couponName)
         return orderCode
     }
@@ -47,7 +48,9 @@ export default class PlaceOrderUseCase {
         for (let inputItem of inputItems) {
             const warehouseItem = await this.warehouseItemRepository.findOne(inputItem.warehouseItemId)
             if (!warehouseItem) throw 'Warehouse item does not exist'
-            const item = new OrderItem(warehouseItem, warehouseItem.price, inputItem.quantity)
+            warehouseItem.removeFromStock(inputItem.quantity)
+            await this.warehouseItemRepository.save(warehouseItem)
+            const item = new OrderItem(warehouseItem.id, warehouseItem.price, inputItem.quantity)
             result.push(item)
         }
         return result

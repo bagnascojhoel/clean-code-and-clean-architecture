@@ -54,12 +54,12 @@ it('Should query connection when counting', async () => {
 
 it('Should find order by its code', async () => {
     const warehouseItem = WarehouseItemMother.createCamera()
-    await warehouseItemRepository.insert(warehouseItem)
+    await warehouseItemRepository.save(warehouseItem)
     const order = new Order(
         new OrderCode(1, 2000),
         DateTimeMother.createDouglasBirthday(),
         CpfMother.createOfRubens(),
-        [new OrderItem(warehouseItem, new Decimal(10), 12)]
+        [new OrderItem(warehouseItem.id, new Decimal(10), 12)]
     )
     const orderCode = await orderRepository.save(order)
     const actual = await orderRepository.findOne(orderCode)
@@ -85,7 +85,7 @@ it('Should save created at date as UTC in ISO format', async () => {
 })
 
 it('Should be all stored orders when finding all', async () => {
-    await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    await warehouseItemRepository.save(WarehouseItemMother.createCamera())
     const order = OrderMother.createRubensOrder()
     await orderRepository.save(order)
     const actual = await orderRepository.findAll()

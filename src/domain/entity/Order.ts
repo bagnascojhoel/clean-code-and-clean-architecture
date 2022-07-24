@@ -34,8 +34,8 @@ export default class Order {
     private containsDuplicatedItems(orderItems: OrderItem[]): boolean {
         const distinct = new Set()
         for (const v of orderItems)
-            if (distinct.has(v.warehouseItem.id)) return true
-            else distinct.add(v.warehouseItem.id)
+            if (distinct.has(v.warehouseItemId)) return true
+            else distinct.add(v.warehouseItemId)
         return false
     }
 }

@@ -21,13 +21,13 @@ afterAll(() => {
 it('Should simulate freight using fixed origin and destination', async () => {
     // Arrange
     const camera = WarehouseItemMother.createCamera()
-    await warehouseRepository.insert(camera)
+    await warehouseRepository.save(camera)
     const fridge = WarehouseItemMother.createFridge()
-    await warehouseRepository.insert(fridge)
+    await warehouseRepository.save(fridge)
     var input = {
         content: [
-            { warehouseItemId: camera.id, quantity: new Decimal(10) },
-            { warehouseItemId: fridge.id, quantity: new Decimal(2) }
+            { warehouseItemId: camera.id, quantity: 10 },
+            { warehouseItemId: fridge.id, quantity: 2 }
         ]
     }
     // Act

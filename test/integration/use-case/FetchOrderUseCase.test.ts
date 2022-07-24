@@ -25,7 +25,7 @@ afterEach(async () => {
 afterAll(async () => connection.destroyConnection())
 
 it('Should fetch order', async () => {
-    await warehouseItemRepository.insert(WarehouseItemMother.createCamera());
+    await warehouseItemRepository.save(WarehouseItemMother.createCamera());
     const generatedCode = await orderRepository.save(OrderMother.createRubensOrder());
     let actual: Order | undefined;
     const presenter = Sinon.spy({

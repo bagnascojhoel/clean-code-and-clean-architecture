@@ -32,22 +32,24 @@ it('Should throw error when placing order with unknown warehouse item', () => {
 })
 
 it('Should throw error when placing order with non-existent coupon', async () => {
-    const warehouseItemId = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    const camera = WarehouseItemMother.createCamera()
+    await warehouseItemRepository.save(camera)
     const orderContent = {
         cpf: CpfMother.createOfRubens(),
-        items: [{ warehouseItemId, quantity: 10 }],
+        items: [{ warehouseItemId: camera.id, quantity: 10 }],
         coupon: 'MYCOUPON'
     }
     expect(async () => await placeOrderUseCase.execute(orderContent)).rejects.toEqual('Coupon does not exist')
 })
 
 it('Should save coupon when placing order with one', async () => {
-    const warehouseItemId = await warehouseItemRepository.insert(WarehouseItemMother.createCamera())
+    const camera = WarehouseItemMother.createCamera()
+    await warehouseItemRepository.save(camera)
     const coupon = CouponMother.create12Off()
     await couponRepository.insert(coupon)
     const orderContent: Input = {
         cpf: CpfMother.createOfRubens(),
-        items: [{ warehouseItemId, quantity: 10 }],
+        items: [{ warehouseItemId: camera.id, quantity: 10 }],
         coupon: coupon.name
     }
     const spiedOrderSave = Sinon.spy(orderRepository, 'save')
@@ -65,4 +67,13 @@ it('Should save coupon when placing order with one', async () => {
     expect(spiedAppliedCouponInsert.withArgs(Sinon.match.has('coupon', coupon)).calledOnce).toBeTruthy()
     spiedOrderSave.restore()
     spiedAppliedCouponInsert.restore()
+})
+
+it('Should reduce warehouse item quantity when placing order of an item', async () => {
+    const warehouseItem = WarehouseItemMother.createCamera()
+    await warehouseItemRepository.save(warehouseItem)
+    const input: Input = { cpf: CpfMother.createOfRubens(), items: [{ warehouseItemId: warehouseItem.id, quantity: 5 }] }
+    await placeOrderUseCase.execute(input)
+    const totalStockAfterPlacingOrder = await warehouseItemRepository.findOne(warehouseItem.id)
+    expect(totalStockAfterPlacingOrder?.quantityOnStock).toBe(warehouseItem.quantityOnStock - 5)
 })
