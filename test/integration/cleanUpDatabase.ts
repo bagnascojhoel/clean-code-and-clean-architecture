@@ -1,4 +1,4 @@
-import DatabaseConnection from "../../src/infra/database/DatabaseConnection";
+import DatabaseConnection from "../../src/infrastructure/database/DatabaseConnection";
 
 export default async function cleanUpDatabase(connection: DatabaseConnection) {
     await Promise.all([
