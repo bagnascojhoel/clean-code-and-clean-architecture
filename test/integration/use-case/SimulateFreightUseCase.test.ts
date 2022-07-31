@@ -19,7 +19,6 @@ afterAll(() => {
 })
 
 it('Should simulate freight using fixed origin and destination', async () => {
-    // Arrange
     const camera = WarehouseItemMother.createCamera()
     await warehouseRepository.save(camera)
     const fridge = WarehouseItemMother.createFridge()
@@ -30,8 +29,8 @@ it('Should simulate freight using fixed origin and destination', async () => {
             { warehouseItemId: fridge.id, quantity: 2 }
         ]
     }
-    // Act
+
     var actual = await useCase.execute(input)
-    // Assert
+
     expect(actual).toEqual(new Decimal('1098.9'))
 })

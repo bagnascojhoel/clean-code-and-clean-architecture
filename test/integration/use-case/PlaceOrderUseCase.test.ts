@@ -1,5 +1,5 @@
 import Sinon from "sinon";
-import PlaceOrderUseCase, { Input } from "../../../src/application/use-case/PlaceOrderUseCase";
+import PlaceOrderUseCase, { PlaceOrderInput } from "../../../src/application/use-case/PlaceOrderUseCase";
 import RepositoryFactory from "../../../src/domain/factory/RepositoryFactory";
 import DatabaseConnectionKnexAdapter from "../../../src/infra/database/DatabaseConnectionKnexAdapter";
 import DatabaseRepositoryFactory from "../../../src/infra/repository-database/DatabaseRepositoryFactory";
@@ -47,7 +47,7 @@ it('Should save coupon when placing order with one', async () => {
     await warehouseItemRepository.save(camera)
     const coupon = CouponMother.create12Off()
     await couponRepository.insert(coupon)
-    const orderContent: Input = {
+    const orderContent: PlaceOrderInput = {
         cpf: CpfMother.createOfRubens(),
         items: [{ warehouseItemId: camera.id, quantity: 10 }],
         coupon: coupon.name
@@ -67,13 +67,4 @@ it('Should save coupon when placing order with one', async () => {
     expect(spiedAppliedCouponInsert.withArgs(Sinon.match.has('coupon', coupon)).calledOnce).toBeTruthy()
     spiedOrderSave.restore()
     spiedAppliedCouponInsert.restore()
-})
-
-it('Should reduce warehouse item quantity when placing order of an item', async () => {
-    const warehouseItem = WarehouseItemMother.createCamera()
-    await warehouseItemRepository.save(warehouseItem)
-    const input: Input = { cpf: CpfMother.createOfRubens(), items: [{ warehouseItemId: warehouseItem.id, quantity: 5 }] }
-    await placeOrderUseCase.execute(input)
-    const totalStockAfterPlacingOrder = await warehouseItemRepository.findOne(warehouseItem.id)
-    expect(totalStockAfterPlacingOrder?.quantityOnStock).toBe(warehouseItem.quantityOnStock - 5)
 })

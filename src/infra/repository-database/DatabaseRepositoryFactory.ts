@@ -10,20 +10,34 @@ import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import WarehouseItemRepositoryDatabase from "./WarehouseItemRepositoryDatabase";
 
 export default class DatabaseRepositoryFactory implements RepositoryFactory {
-    constructor(private connection: DatabaseConnection) {
+    private static orderRepository: OrderRepository
+    private static appliedCouponRepository: AppliedCouponRepository
+    private static couponRepository: CouponRepository
+    private static warehouseItemRepository: WarehouseItemRepository
 
-    }
-    createOrderRepository(): OrderRepository {
-        return new OrderRepositoryDatabase(this.connection)
-    }
-    createAppliedCouponRepository(): AppliedCouponRepository {
-        return new AppliedCouponRepositoryDatabase(this.connection)
-    }
-    createCouponRepository(): CouponRepository {
-        return new CouponRepositoryDatabase(this.connection)
-    }
-    createWarehouseItemRepository(): WarehouseItemRepository {
-        return new WarehouseItemRepositoryDatabase(this.connection)
+    constructor(private connection: DatabaseConnection) { }
+
+    public createOrderRepository(): OrderRepository {
+        if (!DatabaseRepositoryFactory.orderRepository)
+            DatabaseRepositoryFactory.orderRepository = new OrderRepositoryDatabase(this.connection)
+        return DatabaseRepositoryFactory.orderRepository
     }
 
+    public createAppliedCouponRepository(): AppliedCouponRepository {
+        if (!DatabaseRepositoryFactory.appliedCouponRepository)
+            DatabaseRepositoryFactory.appliedCouponRepository = new AppliedCouponRepositoryDatabase(this.connection)
+        return DatabaseRepositoryFactory.appliedCouponRepository
+    }
+
+    public createCouponRepository(): CouponRepository {
+        if (!DatabaseRepositoryFactory.couponRepository)
+            DatabaseRepositoryFactory.couponRepository = new CouponRepositoryDatabase(this.connection)
+        return DatabaseRepositoryFactory.couponRepository
+    }
+
+    public createWarehouseItemRepository(): WarehouseItemRepository {
+        if (!DatabaseRepositoryFactory.warehouseItemRepository)
+            DatabaseRepositoryFactory.warehouseItemRepository = new WarehouseItemRepositoryDatabase(this.connection)
+        return DatabaseRepositoryFactory.warehouseItemRepository
+    }
 }

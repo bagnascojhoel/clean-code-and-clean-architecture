@@ -55,3 +55,10 @@ test('Should be error when there are multiple items of same warehouse items', ()
     const item2 = new OrderItem(123, new Decimal(50), 1);
     expect(() => new Order(ORDER_CODE, DOUGLAS_BIRTHDAY, VALID_CPF, [item1, item2])).toThrowError('There shouldn\'t be more than one item of the same product')
 })
+
+test('Should set aborted date time when aborting order', () => {
+    const item1 = new OrderItem(123, new Decimal(50), 1);
+    const order = new Order(ORDER_CODE, DOUGLAS_BIRTHDAY, VALID_CPF, [item1]);
+    order.abort(DateTimeMother.createDouglasBirthday())
+    expect(order.abortedAt).toEqual(DateTimeMother.createDouglasBirthday())
+}) 

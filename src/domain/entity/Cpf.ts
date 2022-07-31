@@ -3,10 +3,15 @@ import { CpfVerifierDigit } from "./CpfVerifierDigit";
 export default class Cpf {
     private _value: string;
 
-    constructor(value: string | null | undefined) {
+    private constructor(value: string | null | undefined) {
         if (!value) throw Error('There is no value');
         if (this.isInvalidCpf(value)) throw Error('CPF is invalid');
         this._value = this.leaveOnlyDigits(value);
+    }
+
+    public static of(value: Cpf | string | null | undefined): Cpf {
+        if (value instanceof Cpf) return value
+        return new Cpf(value)
     }
 
     public get value(): string {

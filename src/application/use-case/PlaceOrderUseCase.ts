@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import AppliedCoupon from "../../domain/entity/AppliedCoupon";
+import Cpf from "../../domain/entity/Cpf";
 import Order from "../../domain/entity/Order";
 import OrderCode from "../../domain/entity/OrderCode";
 import OrderItem from "../../domain/entity/OrderItem";
@@ -24,14 +25,13 @@ export default class PlaceOrderUseCase {
     }
     // NOTE This approach of defining the sequentialId only works for a single-threaded system. If there
     //  are multiple application that can place orders, then there will be collision.
-    public async execute({ cpf, items, coupon: couponName }: Input): Promise<any> {
+    public async execute({ cpf, items, coupon: couponName }: PlaceOrderInput): Promise<any> {
         const orderItems = await this.createOrderItems(items)
         const orderQuantity = await this.orderRepository.count()
         const creationTime = DateTime.now()
         const orderCode = new OrderCode(orderQuantity + 1, creationTime.year)
         const order = new Order(orderCode, creationTime, cpf, orderItems)
         await this.orderRepository.save(order)
-
         if (couponName) await this.applyCoupon(order, couponName)
         return orderCode
     }
@@ -43,13 +43,13 @@ export default class PlaceOrderUseCase {
         await this.appliedCouponRepository.insert(appliedCoupon)
     }
 
-    private async createOrderItems(inputItems: InputItem[]): Promise<OrderItem[]> {
+    private async createOrderItems(inputItems: PlaceOrderInputItem[]): Promise<OrderItem[]> {
         const result: OrderItem[] = []
         for (let inputItem of inputItems) {
+            // JODO Remove the necessity of fetching warehouse items to fill orderItem.price.
+            //  Instead, define a flow of warehouseItem price change.
             const warehouseItem = await this.warehouseItemRepository.findOne(inputItem.warehouseItemId)
             if (!warehouseItem) throw 'Warehouse item does not exist'
-            warehouseItem.removeFromStock(inputItem.quantity)
-            await this.warehouseItemRepository.save(warehouseItem)
             const item = new OrderItem(warehouseItem.id, warehouseItem.price, inputItem.quantity)
             result.push(item)
         }
@@ -58,14 +58,14 @@ export default class PlaceOrderUseCase {
 
 }
 
-export type InputItem = {
+export type PlaceOrderInputItem = {
     warehouseItemId: WarehouseItemId
     quantity: number
 }
 
-export type Input = {
-    cpf: string,
-    items: InputItem[],
+export type PlaceOrderInput = {
+    cpf: string | Cpf,
+    items: PlaceOrderInputItem[],
     coupon?: string,
 }
 
