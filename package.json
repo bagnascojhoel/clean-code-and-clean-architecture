@@ -4,7 +4,7 @@
     "description": "I'm using this repository to persist all code I create while following the course [by Rodrigo Branas about Clean Code And Clean Architecture](https://app.branas.io/public/products).",
     "main": "/application/main.ts",
     "scripts": {
-        "up": "nodemon --watch 'src/' --exec 'ts-node ./src/application/main' -e ts",
+        "up": "nodemon --watch 'src/' --exec 'ts-node ./src/main' -e ts",
         "test": "del ./dist && jest unit && jest integration --runInBand",
         "test:integration": "del ./dist && jest integration --runInBand",
         "test:unit": "del ./dist && jest unit",
