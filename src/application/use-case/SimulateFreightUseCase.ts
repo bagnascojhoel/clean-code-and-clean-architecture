@@ -2,7 +2,7 @@ import Decimal from "decimal.js"
 import Address from "../../domain/entity/Address"
 import Freight from "../../domain/entity/Freight"
 import FreightableItem from "../../domain/entity/FreightableItem"
-import { WarehouseItemId } from "../../domain/entity/WarehouseItem"
+import { WarehouseItemId } from "../../domain/entity/warehouse/WarehouseItem"
 import RepositoryFactory from "../../domain/factory/RepositoryFactory"
 import WarehouseItemRepository from "../../domain/repository/WarehouseItemRepository"
 
@@ -13,7 +13,7 @@ export default class SimulateFreightUseCase {
     private readonly warehouseRepository: WarehouseItemRepository
 
     constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.warehouseRepository = repositoryFactory.createWarehouseItemRepository()
+        this.warehouseRepository = repositoryFactory.createForWarehouseItem()
     }
 
     async execute(input: SimulateFreightInput): Promise<Decimal> {

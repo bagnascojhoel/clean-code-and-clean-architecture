@@ -1,9 +1,7 @@
-import { functionsIn } from "lodash";
-import { Distance, Weight } from "../../src/domain/entity/MeasureUnit";
-import PhysicalAttributes from "../../src/domain/entity/PhysicalAttributes";
-import SpaceMeasure from "../../src/domain/entity/SpaceMeasure";
-import WeightMeasure from "../../src/domain/entity/WeightMeasure";
-
+import { Distance, Weight } from "../../src/domain/entity/physical-attributes/MeasureUnit";
+import PhysicalAttributes from "../../src/domain/entity/physical-attributes/PhysicalAttributes";
+import SpaceMeasure from "../../src/domain/entity/physical-attributes/SpaceMeasure";
+import WeightMeasure from "../../src/domain/entity/physical-attributes/WeightMeasure";
 
 function createCamera(): PhysicalAttributes {
     return new PhysicalAttributes(

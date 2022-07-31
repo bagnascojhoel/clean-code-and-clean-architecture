@@ -1,8 +1,5 @@
-import Decimal from "decimal.js";
 import { DateTime } from "luxon";
-import Coupon from "./Coupon";
-import Cpf from "./Cpf";
-import Freight from "./Freight";
+import Cpf from "../Cpf";
 import OrderCode from "./OrderCode";
 import OrderItem from "./OrderItem";
 
@@ -22,14 +19,6 @@ export default class Order {
         this.cpf = Cpf.of(cpf);
         this.createdAt = createdAt;
         this.items = items;
-    }
-
-    public calculateTotalPrice(freight: Freight, coupon?: Coupon): Decimal {
-        const itemsTotal = this.items.reduce<Decimal>((acc, item) => acc.plus(item.totalPrice), new Decimal(0))
-        const couponDiscount = coupon?.calculateDiscount(this.createdAt, itemsTotal) ?? new Decimal(0)
-        return itemsTotal
-            .sub(couponDiscount)
-            .plus(freight.calculatePrice());
     }
 
     public abort(when: DateTime): void {

@@ -6,7 +6,7 @@ export default class ValidateCouponUseCase {
     private readonly couponRepository: CouponRepository
 
     constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.couponRepository = repositoryFactory.createCouponRepository()
+        this.couponRepository = repositoryFactory.createCoupon()
     }
 
     public async execute(couponName: string): Promise<boolean> {

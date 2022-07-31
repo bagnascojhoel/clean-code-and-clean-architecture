@@ -1,4 +1,4 @@
-import Order from "../../domain/entity/Order";
+import Order from "../../domain/entity/order/Order";
 import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import OrderRepository from "../../domain/repository/OrderRepository";
 
@@ -6,7 +6,7 @@ export default class ListOrdersUseCase {
     private readonly orderRepository: OrderRepository
 
     constructor(private repositoryFactory: RepositoryFactory) {
-        this.orderRepository = repositoryFactory.createOrderRepository()
+        this.orderRepository = repositoryFactory.createOrder()
     }
 
     public async execute(presenter: ListOrdersPresenter) {

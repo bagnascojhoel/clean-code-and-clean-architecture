@@ -1,16 +1,16 @@
 import { DateTime } from "luxon";
 import AppliedCoupon from "../../domain/entity/AppliedCoupon";
 import Cpf from "../../domain/entity/Cpf";
-import Order from "../../domain/entity/Order";
-import OrderCode from "../../domain/entity/OrderCode";
-import OrderItem from "../../domain/entity/OrderItem";
-import { WarehouseItemId } from "../../domain/entity/WarehouseItem";
+import Order from "../../domain/entity/order/Order";
+import OrderCode from "../../domain/entity/order/OrderCode";
+import OrderItem from "../../domain/entity/order/OrderItem";
+import { WarehouseItemId } from "../../domain/entity/warehouse/WarehouseItem";
 import RepositoryFactory from "../../domain/factory/RepositoryFactory";
 import AppliedCouponRepository from "../../domain/repository/AppliedCouponRepository";
 import CouponRepository from "../../domain/repository/CouponRepository";
 import OrderRepository from "../../domain/repository/OrderRepository";
 import WarehouseItemRepository from "../../domain/repository/WarehouseItemRepository";
-// TODO Use presenters
+
 export default class PlaceOrderUseCase {
     private readonly orderRepository: OrderRepository
     private readonly warehouseItemRepository: WarehouseItemRepository
@@ -18,10 +18,10 @@ export default class PlaceOrderUseCase {
     private readonly couponRepository: CouponRepository
 
     constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.orderRepository = repositoryFactory.createOrderRepository()
-        this.warehouseItemRepository = repositoryFactory.createWarehouseItemRepository()
-        this.appliedCouponRepository = repositoryFactory.createAppliedCouponRepository()
-        this.couponRepository = repositoryFactory.createCouponRepository()
+        this.orderRepository = repositoryFactory.createOrder()
+        this.warehouseItemRepository = repositoryFactory.createForWarehouseItem()
+        this.appliedCouponRepository = repositoryFactory.createAppliedCoupon()
+        this.couponRepository = repositoryFactory.createCoupon()
     }
     // NOTE This approach of defining the sequentialId only works for a single-threaded system. If there
     //  are multiple application that can place orders, then there will be collision.
@@ -44,16 +44,10 @@ export default class PlaceOrderUseCase {
     }
 
     private async createOrderItems(inputItems: PlaceOrderInputItem[]): Promise<OrderItem[]> {
-        const result: OrderItem[] = []
-        for (let inputItem of inputItems) {
-            // JODO Remove the necessity of fetching warehouse items to fill orderItem.price.
-            //  Instead, define a flow of warehouseItem price change.
-            const warehouseItem = await this.warehouseItemRepository.findOne(inputItem.warehouseItemId)
-            if (!warehouseItem) throw 'Warehouse item does not exist'
-            const item = new OrderItem(warehouseItem.id, warehouseItem.price, inputItem.quantity)
-            result.push(item)
-        }
-        return result
+        const warehouseItemsIds = inputItems.reduce((acc: WarehouseItemId[], i) => (acc.push(i.warehouseItemId), acc), [])
+        const allWarehouseItemsExist = await this.warehouseItemRepository.exists(warehouseItemsIds)
+        if (!allWarehouseItemsExist) throw 'At least one item of the order does not exist'
+        return inputItems.map(i => new OrderItem(i.warehouseItemId, i.quantity))
     }
 
 }

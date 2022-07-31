@@ -1,5 +1,5 @@
-import { Distance } from "./MeasureUnit";
-import SpaceMeasure from "./SpaceMeasure";
+import { Distance } from "./physical-attributes/MeasureUnit";
+import SpaceMeasure from "./physical-attributes/SpaceMeasure";
 
 export default class Address {
 

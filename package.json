@@ -9,7 +9,7 @@
         "test:integration": "del ./dist && jest integration --runInBand",
         "test:unit": "del ./dist && jest unit",
         "test:coverage": "jest --coverage",
-        "migrate:latest": "knex --env development migrate:latest"
+        "test:migrate": "knex --env test migrate:latest"
     },
     "repository": {
         "type": "git",

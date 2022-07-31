@@ -1,7 +1,6 @@
 import Address from "../../../src/domain/entity/Address";
-import { Distance } from "../../../src/domain/entity/MeasureUnit";
-import SpaceMeasure from "../../../src/domain/entity/SpaceMeasure";
-
+import { Distance } from "../../../src/domain/entity/physical-attributes/MeasureUnit";
+import SpaceMeasure from "../../../src/domain/entity/physical-attributes/SpaceMeasure";
 test('Should be created when all parameters are valid', () => {
     expect(() => new Address()).not.toThrow();
 });

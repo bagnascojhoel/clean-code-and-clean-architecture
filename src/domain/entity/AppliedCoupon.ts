@@ -1,5 +1,5 @@
 import Coupon from "./Coupon";
-import Order from "./Order";
+import Order from "./order/Order";
 
 export default class AppliedCoupon {
     constructor(
