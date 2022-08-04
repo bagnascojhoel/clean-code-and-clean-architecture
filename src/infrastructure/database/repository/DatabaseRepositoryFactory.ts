@@ -4,12 +4,14 @@ import CouponRepository from "../../../domain/repository/CouponRepository";
 import OrderRepository from "../../../domain/repository/OrderRepository";
 import WarehouseItemRepository from "../../../domain/repository/WarehouseItemRepository";
 import WarehousePriceEntryRepository from "../../../domain/repository/WarehousePriceEntryRepository";
+import WarehouseStockEntryRepository from "../../../domain/repository/WarehouseStockEntryRepository";
 import DatabaseConnection from "../DatabaseConnection";
 import AppliedCouponRepositoryDatabase from "./AppliedCouponRepositoryDatabase";
 import CouponRepositoryDatabase from "./CouponRepositoryDatabase";
 import OrderRepositoryDatabase from "./OrderRepositoryDatabase";
 import WarehouseItemRepositoryDatabase from "./WarehouseItemRepositoryDatabase";
 import WarehousePriceEntryRepositoryDatabase from "./WarehousePriceEntryRepositoryDatabase";
+import WarehouseStockEntryRepositoryDatabase from "./WarehouseStockEntryRepositoryDatabase";
 
 export default class DatabaseRepositoryFactory implements RepositoryFactory {
     private static orderRepository: OrderRepository
@@ -17,28 +19,29 @@ export default class DatabaseRepositoryFactory implements RepositoryFactory {
     private static couponRepository: CouponRepository
     private static warehouseItemRepository: WarehouseItemRepository
     private static warehousePriceEntryRepository: WarehousePriceEntryRepository
+    private static warehouseStockEntryRepository: WarehouseStockEntryRepository
 
     constructor(private connection: DatabaseConnection) { }
 
-    public createOrder(): OrderRepository {
+    createForOrder(): OrderRepository {
         if (!DatabaseRepositoryFactory.orderRepository)
             DatabaseRepositoryFactory.orderRepository = new OrderRepositoryDatabase(this.connection)
         return DatabaseRepositoryFactory.orderRepository
     }
 
-    public createAppliedCoupon(): AppliedCouponRepository {
+    createAppliedCoupon(): AppliedCouponRepository {
         if (!DatabaseRepositoryFactory.appliedCouponRepository)
             DatabaseRepositoryFactory.appliedCouponRepository = new AppliedCouponRepositoryDatabase(this.connection)
         return DatabaseRepositoryFactory.appliedCouponRepository
     }
 
-    public createCoupon(): CouponRepository {
+    createCoupon(): CouponRepository {
         if (!DatabaseRepositoryFactory.couponRepository)
             DatabaseRepositoryFactory.couponRepository = new CouponRepositoryDatabase(this.connection)
         return DatabaseRepositoryFactory.couponRepository
     }
 
-    public createForWarehouseItem(): WarehouseItemRepository {
+    createForWarehouseItem(): WarehouseItemRepository {
         if (!DatabaseRepositoryFactory.warehouseItemRepository)
             DatabaseRepositoryFactory.warehouseItemRepository = new WarehouseItemRepositoryDatabase(this.connection)
         return DatabaseRepositoryFactory.warehouseItemRepository
@@ -48,5 +51,11 @@ export default class DatabaseRepositoryFactory implements RepositoryFactory {
         if (!DatabaseRepositoryFactory.warehousePriceEntryRepository)
             DatabaseRepositoryFactory.warehousePriceEntryRepository = new WarehousePriceEntryRepositoryDatabase(this.connection)
         return DatabaseRepositoryFactory.warehousePriceEntryRepository
+    }
+
+    createForWarehouseStockEntry(): WarehouseStockEntryRepository {
+        if (!DatabaseRepositoryFactory.warehouseStockEntryRepository)
+            DatabaseRepositoryFactory.warehouseStockEntryRepository = new WarehouseStockEntryRepositoryDatabase(this.connection)
+        return DatabaseRepositoryFactory.warehouseStockEntryRepository
     }
 }

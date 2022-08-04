@@ -21,7 +21,7 @@ export default class Order {
         this.items = items;
     }
 
-    public abort(when: DateTime): void {
+    public cancel(when: DateTime): void {
         this._abortedAt = when;
     }
 
@@ -33,7 +33,7 @@ export default class Order {
         return false
     }
 
-    get abortedAt(): DateTime | undefined {
+    get cancelledAt(): DateTime | undefined {
         return this._abortedAt
     }
 }

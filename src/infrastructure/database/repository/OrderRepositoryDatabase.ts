@@ -11,7 +11,8 @@ const TABLE_ORDER_ITEM = 'order_item'
 const TABLE_ORDER_COLUMNS = `
     o.code,
     o.buyer_cpf as buyerCpf,
-    o.created_at as createdAt
+    o.created_at as createdAt,
+    o.cancelled_at as cancelledAt
 `
 const TABLE_ORDER_ITEM_VALUES = `
     oi.quantity as orderItemQuantity,
@@ -22,6 +23,7 @@ type OrderRow = {
     code: string
     buyerCpf: string
     createdAt: string
+    cancelledAt: string
 }
 
 type OrderItemRow = {
@@ -44,32 +46,40 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         this.connection = conn
     }
 
-    public async save(order: Order): Promise<OrderCode> {
+    async saveCancellation(order: Order): Promise<void> {
+        const statement = `
+            UPDATE ${TABLE_ORDER} SET cancelled_at = ? WHERE code = ?
+        `
+        await this.connection.query(statement, [order.cancelledAt, order.code.value])
+    }
+
+    async save(order: Order): Promise<OrderCode> {
         const insertOrderStatement = `
         INSERT INTO ${TABLE_ORDER}
-            (code, buyer_cpf, created_at)
+            (code, buyer_cpf, created_at, cancelled_at)
         VALUES
-            (?, ?, ?)
+            (?, ?, ?, ?)
         `
         await this.connection.query(
             insertOrderStatement,
             [
                 order.code.value,
                 order.cpf.value,
-                order.createdAt.toUTC().toISO()
+                order.createdAt.toUTC().toISO(),
+                order.cancelledAt?.toUTC().toISO() ?? null
             ]
         )
         await this.insertOrderItems(order.code, order.items)
         return order.code
     }
 
-    public async count(): Promise<number> {
+    async count(): Promise<number> {
         const statement = `SELECT count(1) as total FROM ${TABLE_ORDER}`
         const [{ total }] = await this.connection.query(statement)
         return total
     }
 
-    public async findOne(anOrderCode: OrderCode): Promise<Order | null> {
+    async findOne(anOrderCode: OrderCode): Promise<Order | null> {
         const statementOrder = `
         SELECT ${TABLE_ORDER_COLUMNS}
         FROM ${TABLE_ORDER} as o
@@ -78,15 +88,19 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         const [orderRow]: OrderRow[] = await this.connection.query(statementOrder, anOrderCode.value)
         if (!orderRow) return null
         const orderItems: OrderItem[] = await this.findOrderItems(anOrderCode)
-        return new Order(
+        // TODO Use a memento to restore state without breaking encapsulation too much
+        const order = new Order(
             anOrderCode,
             DateTime.fromISO(orderRow.createdAt),
             orderRow.buyerCpf,
             orderItems
         )
+        if (orderRow.cancelledAt)
+            order.cancel(DateTime.fromISO(orderRow.cancelledAt))
+        return order
     }
 
-    public async findAll(): Promise<Order[]> {
+    async findAll(): Promise<Order[]> {
         const statement = `
             SELECT
                 ${TABLE_ORDER_ITEM_VALUES},

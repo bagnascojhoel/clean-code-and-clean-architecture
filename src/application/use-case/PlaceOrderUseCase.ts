@@ -18,7 +18,7 @@ export default class PlaceOrderUseCase {
     private readonly couponRepository: CouponRepository
 
     constructor(private readonly repositoryFactory: RepositoryFactory) {
-        this.orderRepository = repositoryFactory.createOrder()
+        this.orderRepository = repositoryFactory.createForOrder()
         this.warehouseItemRepository = repositoryFactory.createForWarehouseItem()
         this.appliedCouponRepository = repositoryFactory.createAppliedCoupon()
         this.couponRepository = repositoryFactory.createCoupon()

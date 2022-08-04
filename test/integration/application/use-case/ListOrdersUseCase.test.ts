@@ -10,7 +10,7 @@ import cleanUpDatabase from "../../cleanUpDatabase";
 const connection = new DatabaseConnectionKnexAdapter
 const repoFactory = new DatabaseRepositoryFactory(connection)
 const listOrdersUseCase = new ListOrdersUseCase(repoFactory)
-const orderRepository = repoFactory.createOrder()
+const orderRepository = repoFactory.createForOrder()
 const warehouseItemRepository = repoFactory.createForWarehouseItem()
 
 afterEach(async () => {

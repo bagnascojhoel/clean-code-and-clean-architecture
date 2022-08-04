@@ -37,6 +37,6 @@ test('Should be error when there are multiple items of same warehouse items', ()
 test('Should set aborted date time when aborting order', () => {
     const item1 = new OrderItem(123, 1);
     const order = new Order(ORDER_CODE, DOUGLAS_BIRTHDAY, VALID_CPF, [item1]);
-    order.abort(DateTimeMother.createDouglasBirthdayAt2022())
-    expect(order.abortedAt).toEqual(DateTimeMother.createDouglasBirthdayAt2022())
+    order.cancel(DateTimeMother.createDouglasBirthdayAt2022())
+    expect(order.cancelledAt).toEqual(DateTimeMother.createDouglasBirthdayAt2022())
 }) 

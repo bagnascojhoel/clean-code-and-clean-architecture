@@ -1,5 +1,5 @@
 import axios from "axios"
-import ErrorDto from "../../../../../src/presentation/rest/dto/ErrorDto"
+import ErrorDto from "../../../../../src/infrastructure/rest/dto/ErrorDto"
 import { SERVER_URL } from "./constants"
 
 describe('Presentation > Rest > ErrorHandling', () => {

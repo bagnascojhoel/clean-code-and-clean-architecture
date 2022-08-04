@@ -6,7 +6,7 @@ import WarehousePriceEntryRepository from "../repository/WarehousePriceEntryRepo
 import WarehouseStockEntryRepository from "../repository/WarehouseStockEntryRepository";
 
 export default interface RepositoryFactory {
-    createOrder(): OrderRepository
+    createForOrder(): OrderRepository
     createAppliedCoupon(): AppliedCouponRepository
     createCoupon(): CouponRepository
     createForWarehouseItem(): WarehouseItemRepository

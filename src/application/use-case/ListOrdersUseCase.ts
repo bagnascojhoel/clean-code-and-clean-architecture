@@ -6,7 +6,7 @@ export default class ListOrdersUseCase {
     private readonly orderRepository: OrderRepository
 
     constructor(private repositoryFactory: RepositoryFactory) {
-        this.orderRepository = repositoryFactory.createOrder()
+        this.orderRepository = repositoryFactory.createForOrder()
     }
 
     public async execute(presenter: ListOrdersPresenter) {

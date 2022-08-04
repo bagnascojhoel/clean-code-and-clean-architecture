@@ -9,5 +9,6 @@ export default async function cleanUpDatabase(connection: DatabaseConnection) {
         connection.clear('coupon'),
         connection.clear('address'),
         connection.clear('freight'),
+        connection.clear('warehouse_price_entry')
     ]);
 }

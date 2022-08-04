@@ -1,8 +1,9 @@
 const CREATE_TABLE_ORDER = `
     CREATE TABLE \`order\` (
-        code        VARCHAR(12) PRIMARY KEY NOT NULL,
-        buyer_cpf   VARCHAR(11) NOT NULL,
-        created_at  DATETIME NOT NULL
+        code            VARCHAR(12) PRIMARY KEY NOT NULL,
+        buyer_cpf       VARCHAR(11) NOT NULL,
+        created_at      DATETIME NOT NULL,
+        cancelled_at    DATETIME
     )
 `
 

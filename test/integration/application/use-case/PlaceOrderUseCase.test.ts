@@ -14,7 +14,7 @@ const placeOrderUseCase = new PlaceOrderUseCase(repositoryFactory)
 const warehouseItemRepository = repositoryFactory.createForWarehouseItem()
 const couponRepository = repositoryFactory.createCoupon()
 const appliedCouponRepository = repositoryFactory.createAppliedCoupon()
-const orderRepository = repositoryFactory.createOrder()
+const orderRepository = repositoryFactory.createForOrder()
 
 afterEach(async () => {
     Sinon.restore()
@@ -56,10 +56,11 @@ it('Should save coupon when placing order with one', async () => {
     const spiedAppliedCouponInsert = Sinon.spy(appliedCouponRepository, 'insert')
     const fakeRepoFactory: RepositoryFactory = {
         createAppliedCoupon: () => appliedCouponRepository,
-        createOrder: () => orderRepository,
+        createForOrder: () => orderRepository,
         createCoupon: () => couponRepository,
         createForWarehouseItem: () => warehouseItemRepository,
-        createForWarehousePriceEntry: () => repositoryFactory.createForWarehousePriceEntry(),
+        createForWarehousePriceEntry: repositoryFactory.createForWarehousePriceEntry,
+        createForWarehouseStockEntry: repositoryFactory.createForWarehouseStockEntry
     }
     const useCase = new PlaceOrderUseCase(fakeRepoFactory)
     await useCase.execute(orderContent)
