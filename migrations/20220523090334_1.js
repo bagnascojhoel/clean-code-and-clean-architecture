@@ -28,6 +28,17 @@ const CREATE_TABLE_WAREHOUSE_PRICE_ENTRY = `
     )
 `
 
+const CREATE_TABLE_WAREHOUSE_STOCK_ENTRY = `
+    CREATE TABLE warehouse_stock_entry (
+        warehouse_stock_entry_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+        entry_type                  TEXT CHECK(entry_type IN ('in', 'out')),
+        warehouse_item_id           INTEGER NOT NULL,
+        quantity                    DECIMAL(10,3) NOT NULL,
+        registered_at               DATETIME NOT NULL,
+        FOREIGN KEY (warehouse_item_id) REFERENCES warehouse_item (warehouse_item_id)
+    )
+`
+
 const CREATE_TABLE_ORDER_ITEM = `
     CREATE TABLE order_item (
         order_item_id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,6 +91,7 @@ exports.up = async function up(knex) {
     await knex.raw(CREATE_TABLE_ORDER)
     await knex.raw(CREATE_TABLE_WAREHOUSE_ITEM)
     await knex.raw(CREATE_TABLE_WAREHOUSE_PRICE_ENTRY)
+    await knex.raw(CREATE_TABLE_WAREHOUSE_STOCK_ENTRY)
     await knex.raw(CREATE_TABLE_ORDER_ITEM)
     await knex.raw(CREATE_TABLE_ADDRESS)
     await knex.raw(CREATE_TABLE_FREIGHT)
@@ -91,6 +103,7 @@ exports.down = async function down(knex) {
     await knex.schema.dropTableIfExists('order')
     await knex.schema.dropTableIfExists('warehouse_item')
     await knex.schema.dropTableIfExists('warehouse_price_entry')
+    await knex.schema.dropTableIfExists('warehouse_stock_entry')
     await knex.schema.dropTableIfExists('order_item')
     await knex.schema.dropTableIfExists('address')
     await knex.schema.dropTableIfExists('freight')

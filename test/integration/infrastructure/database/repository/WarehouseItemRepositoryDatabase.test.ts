@@ -13,7 +13,7 @@ describe('Infrastructure > Database > Repository > WarehouseItemRepository', () 
         await cleanUpDatabase(connection)
     })
 
-    afterAll(async () => connection.destroyConnection())
+    afterAll(async () => await connection.destroyConnection())
 
     it('Should insert warehouse item', async () => {
         const camera = WarehouseItemMother.createCamera()

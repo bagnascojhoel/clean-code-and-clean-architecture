@@ -1,5 +1,6 @@
 import DomainEvent from "../../domain/event/DomainEvent";
-import EventQueue, { DomainEventHandler } from "../../domain/event/EventQueue";
+import EventHandler from "../../domain/event/EventHandler";
+import EventQueue from "../../domain/event/EventQueue";
 
 
 export default class EventQueueMemoryAdapter implements EventQueue {
@@ -9,14 +10,14 @@ export default class EventQueueMemoryAdapter implements EventQueue {
         this.consumers = []
     }
 
-    async consume(eventName: string, handler: DomainEventHandler): Promise<void> {
+    async consume(eventName: string, handler: EventHandler<DomainEvent>): Promise<void> {
         this.consumers.push({ eventName, handler })
     }
 
     async publish(domainEvent: DomainEvent): Promise<void> {
         this.consumers.forEach(({ eventName, handler }) => {
             if (domainEvent.key === eventName)
-                handler(domainEvent)
+                handler.handle(domainEvent)
         })
     }
 
@@ -24,5 +25,5 @@ export default class EventQueueMemoryAdapter implements EventQueue {
 
 type Consumer = {
     eventName: string,
-    handler: DomainEventHandler
+    handler: EventHandler<DomainEvent>
 }
