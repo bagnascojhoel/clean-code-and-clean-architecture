@@ -7,9 +7,7 @@ export default class WarehouseStockEntry {
         readonly warehouseItemId: WarehouseItemId,
         readonly quantity: number,
         readonly registeredAt: DateTime
-    ) {
-
-    }
+    ) { }
 
     public static of(
         type: EntryType,

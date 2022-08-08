@@ -9,7 +9,7 @@
         "test:integration": "del ./dist && jest integration --runInBand",
         "test:unit": "del ./dist && jest unit",
         "test:coverage": "jest --coverage --runInBand",
-        "test:migrate": "knex --env test migrate:latest"
+        "test:migrate": "rm test.sqlite3 && knex --env test migrate:latest"
     },
     "repository": {
         "type": "git",

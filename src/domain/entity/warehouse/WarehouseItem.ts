@@ -4,12 +4,9 @@ export default class WarehouseItem {
     constructor(
         readonly id: WarehouseItemId,
         readonly description: string,
-        readonly physicalAttributes: PhysicalAttributes
-    ) {
-        this.id = id
-        this.description = description
-        this.physicalAttributes = physicalAttributes
-    }
+        readonly physicalAttributes: PhysicalAttributes,
+        public quantity: number
+    ) { }
 }
 
 export type WarehouseItemId = number

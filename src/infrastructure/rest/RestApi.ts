@@ -5,18 +5,25 @@ import OrderController from './controller/OrderController';
 import ErrorDto from "./dto/ErrorDto";
 
 export default class RestApi {
+    private hasStarted?: boolean
+
     constructor(
         private httpServer: HttpServer,
         private repositoryFactory: RepositoryFactory
     ) { }
 
     public start(port: number, contextPath: string = '/api') {
+        if (this.hasStarted) return;
         this.httpServer.withContextPath(contextPath)
         this.setupControllers()
         this.setupErrorHandlers()
         this.httpServer.start(port, () => {
             console.log(`Started application at port ${port}`);
         })
+    }
+
+    public stop(): void {
+        this.httpServer.stop()
     }
 
     private setupControllers() {

@@ -17,6 +17,6 @@ export default class WarehouseStockEntryInEventHandler implements EventHandler<O
     async handle(domainEvent: OrderCancelledEvent): Promise<void> {
         const entries = domainEvent.orderItems.map(oi => WarehouseStockEntry.of("in", oi.warehouseItemId, oi.quantity, DateTime.now()))
         await this.warehouseStockEntryRepository.insert(entries)
-        await this.eventQueue.publish(new WarehouseStockChangeEvent(entries))
+        await this.eventQueue.publish(WarehouseStockChangeEvent.of(entries))
     }
 }

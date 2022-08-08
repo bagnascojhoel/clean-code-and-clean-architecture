@@ -11,6 +11,7 @@ const CREATE_TABLE_WAREHOUSE_ITEM = `
     CREATE TABLE warehouse_item (
         warehouse_item_id   INTEGER PRIMARY KEY AUTOINCREMENT,
         description         TEXT NOT NULL,
+        quantity            INTEGER DEFAULT 0,
         metric_width        DECIMAL(10,3) NOT NULL,
         metric_length       DECIMAL(10,3) NOT NULL,
         metric_height       DECIMAL(10,3) NOT NULL,

@@ -13,7 +13,8 @@ const TABLE_WAREHOUSE_ITEM_COLUMNS = `
     metric_width as metricWidth,
     metric_length as metricLength,
     metric_height as metricHeight,
-    kilogram_weight as kilogramWeight
+    kilogram_weight as kilogramWeight,
+    quantity
 `
 
 export default class WarehouseItemRepositoryDatabase implements WarehouseItemRepository {
@@ -25,11 +26,12 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
     public async save(warehouseItem: WarehouseItem): Promise<void> {
         const statement = `
         INSERT INTO ${TABLE_WAREHOUSE_ITEM}
-            (warehouse_item_id, description, metric_width, metric_length, metric_height, kilogram_weight)
+            (warehouse_item_id, description, quantity, metric_width, metric_length, metric_height, kilogram_weight)
         VALUES
-            (?, ?, ?, ?, ?, ?)
+            (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(warehouse_item_id) DO UPDATE SET
             description = excluded.description,
+            quantity = excluded.quantity,
             metric_width = excluded.metric_width,
             metric_length = excluded.metric_length,
             metric_height = excluded.metric_height,
@@ -41,6 +43,7 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
             [
                 warehouseItem.id,
                 warehouseItem.description,
+                warehouseItem.quantity,
                 warehouseItem.physicalAttributes.widthX.as(Distance.M).value,
                 warehouseItem.physicalAttributes.lengthY.as(Distance.M).value,
                 warehouseItem.physicalAttributes.heightZ.as(Distance.M).value,
@@ -77,7 +80,7 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
     }
 
     private createWarehouseItem(
-        { id, description, metricHeight, metricLength, metricWidth, kilogramWeight }: WarehouseItemRow
+        { id, description, metricHeight, metricLength, metricWidth, kilogramWeight, quantity }: WarehouseItemRow
     ): WarehouseItem {
         const physicalAttributes = new PhysicalAttributes(
             new SpaceMeasure(metricWidth, Distance.M),
@@ -85,7 +88,7 @@ export default class WarehouseItemRepositoryDatabase implements WarehouseItemRep
             new SpaceMeasure(metricLength, Distance.M),
             new WeightMeasure(kilogramWeight, Weight.KG)
         )
-        return new WarehouseItem(id, description, physicalAttributes)
+        return new WarehouseItem(id, description, physicalAttributes, quantity)
     }
 
 }
@@ -97,4 +100,5 @@ type WarehouseItemRow = {
     metricLength: number
     metricHeight: number
     kilogramWeight: number
+    quantity: number
 }
