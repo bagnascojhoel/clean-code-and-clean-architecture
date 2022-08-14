@@ -3,10 +3,10 @@ import { Router } from "express";
 import ListOrdersUseCase, { ListOrdersPresenter } from "../../../application/use-case/ListOrdersUseCase";
 import RepositoryFactory from "../../../domain/factory/RepositoryFactory";
 
-// TODO Test this
+// TODO Test this class
 export default class OrderController {
     constructor(private router: Router, private repositoryFactory: RepositoryFactory) {
-        router.get('/', async (req, res) => {
+        router.get('', async (req, res) => {
             const useCase = new ListOrdersUseCase(repositoryFactory)
             let result;
             const presenter: ListOrdersPresenter = {

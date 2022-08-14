@@ -7,6 +7,7 @@ import HttpServer from "./HttpServer";
 export default class AxiosAdapter implements HttpServer {
     private app: express.Application
     private server?: http.Server
+    private contextPath: string = ''
 
     constructor(private readonly onStartup?: (() => void)) {
         this.app = express()
@@ -28,11 +29,12 @@ export default class AxiosAdapter implements HttpServer {
     }
 
     withContextPath(contextPath: string): void {
-        this.app.route(contextPath)
+        this.contextPath = contextPath
     }
 
     mapRoute(route: string, router: Router): void {
-        this.app.use(route, router)
+        const fullRoute = this.contextPath ? this.contextPath + route : route
+        this.app.use(fullRoute, router)
     }
 
     withHandler(handler: RequestHandler<any, any, any, ParsedQs, Record<string, any>> | ErrorRequestHandler<any, any, any, ParsedQs, Record<string, any>>): void {
