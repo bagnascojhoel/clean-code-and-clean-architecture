@@ -3,7 +3,7 @@ import { Router } from "express";
 import ListOrdersUseCase, { ListOrdersPresenter } from "../../../application/use-case/ListOrdersUseCase";
 import RepositoryFactory from "../../../domain/factory/RepositoryFactory";
 
-// TODO Test this class
+// TODO Add more behaviors and test it
 export default class OrderController {
     constructor(private router: Router, private repositoryFactory: RepositoryFactory) {
         router.get('', async (req, res) => {
